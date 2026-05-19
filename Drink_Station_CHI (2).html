@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飲品站 每日工作流程</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --max-w:393px;
+  --pad-h:12px;
+  --pad-v:16px;
+  --time-col:68px;
+  --title-size:19px;
+  --sec-size:12px;
+  --task-size:12px;
+  --detail-size:11px;
+  --tag-size:9px;
+  --radius:10px;
+  --pans-h:150px;
+  --pan-name:10px;
+  --pan-en:8px;
+  --pan-lbl:7px;
+}
+@media(min-width:600px){
+  :root{
+    --max-w:680px;
+    --pad-h:20px;
+    --time-col:90px;
+    --title-size:22px;
+    --sec-size:13px;
+    --task-size:13px;
+    --detail-size:12px;
+    --tag-size:10px;
+    --radius:12px;
+    --pans-h:185px;
+    --pan-name:12px;
+    --pan-en:10px;
+    --pan-lbl:9px;
+  }
+}
+@media(min-width:1024px){
+  :root{
+    --max-w:860px;
+    --pad-h:28px;
+    --time-col:110px;
+    --title-size:24px;
+    --sec-size:14px;
+    --task-size:14px;
+    --detail-size:13px;
+    --tag-size:11px;
+    --radius:12px;
+    --pans-h:200px;
+    --pan-name:13px;
+    --pan-en:11px;
+    --pan-lbl:10px;
+  }
+}
+body{font-family:-apple-system,Arial,sans-serif;background:#f2f2f0;color:#2c2c2a;max-width:var(--max-w);margin:0 auto;padding:0;}
+.sticky-header{position:sticky;top:0;z-index:10;background:#f2f2f0;padding:var(--pad-v) var(--pad-h) 10px;}
+.page-title{font-size:var(--title-size);font-weight:600;margin-bottom:1px;}
+.page-ref{font-size:calc(var(--detail-size) - 1px);color:#aaa;margin-bottom:2px;}
+.page-sub{font-size:calc(var(--detail-size) - 1px);color:#aaa;}
+.page{padding:0 var(--pad-h) 40px;}
+.section{margin-bottom:18px;}
+.sec-header{display:flex;align-items:center;gap:7px;margin-bottom:8px;padding:8px 0 6px;border-bottom:1.5px solid #e0e0dc;}
+.sec-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.sec-title{font-size:var(--sec-size);font-weight:600;letter-spacing:0.01em;}
+.sec-time{font-size:calc(var(--tag-size) + 1px);color:#aaa;margin-left:auto;white-space:nowrap;}
+.tag{display:inline-block;font-size:var(--tag-size);font-weight:600;padding:1px 5px;border-radius:3px;margin-left:2px;}
+.tag-wd{background:#E6F1FB;color:#0C447C;}
+.tag-we{background:#EEEDFE;color:#3C3489;}
+.task-row{display:grid;grid-template-columns:var(--time-col) minmax(0,1fr);margin-bottom:5px;border:1px solid #e4e4e0;border-radius:var(--radius);overflow:hidden;}
+.task-row.warn{border-color:#F09595;}
+.time-col{padding:10px 8px;display:flex;flex-direction:column;gap:1px;background:#f8f8f6;border-right:1px solid #e4e4e0;justify-content:center;}
+.time-wd{font-size:calc(var(--detail-size) - 1px);font-weight:600;color:#2c2c2a;white-space:nowrap;}
+.time-label{font-size:calc(var(--tag-size) - 1px);color:#bbb;white-space:nowrap;}
+.time-sep{height:6px;}
+.content-col{padding:10px 13px;background:#fff;}
+.task-row.warn .content-col{background:#FFF5F5;}
+.task-name{font-size:var(--task-size);font-weight:600;margin-bottom:5px;line-height:1.35;color:#2c2c2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.task-row.warn .task-name{color:#A32D2D;}
+.task-sub{font-size:calc(var(--detail-size) - 2px);font-weight:400;color:#aaa;display:block;margin-top:-3px;margin-bottom:5px;}
+.detail-list{display:flex;flex-direction:column;gap:4px;}
+.detail-item{font-size:var(--detail-size);color:#5f5e5a;line-height:1.5;padding-left:12px;position:relative;}
+.detail-item::before{content:'·';position:absolute;left:2px;color:#ccc;}
+.detail-item.warn-note{color:#A32D2D;font-weight:500;}
+.detail-item.warn-note::before{content:'⚠';left:0;font-size:9px;}
+.fridge-wrap{border:1px solid #e0e0dc;border-radius:8px;padding:8px 8px 5px;background:#f8f8f6;margin-top:10px;}
+.fridge-lbl{font-size:calc(var(--tag-size) - 1px);color:#bbb;text-align:center;margin-bottom:7px;}
+.pans{display:flex;gap:4px;height:var(--pans-h);}
+.pan{flex:1;border-radius:5px;border:1px solid #ddd;display:flex;flex-direction:column;overflow:hidden;}
+.pan-fill{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+.pan-name{font-size:var(--pan-name);font-weight:600;}
+.pan-en{font-size:var(--pan-en);opacity:0.6;}
+.pan-lbl{font-size:var(--pan-lbl);color:#bbb;text-align:center;padding:2px 1px;}
+@media print{
+  body{background:#fff;}
+  .sticky-header{position:static;}
+  .task-row{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="sticky-header">
+  <p class="page-title">飲品站 每日工作流程</p>
+  <p class="page-ref">時間供參考</p>
+  <p class="page-sub">Drink Station — Daily Operations</p>
+</div>
+<div class="page">
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#378ADD"></div>
+    <span class="sec-title">開市準備 Opening</span>
+    <span class="sec-time"><span class="tag tag-wd">平日 1000</span><span class="tag tag-we">週末 0800</span></span>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1000</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0800</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">開啟所有開關</div>
+      <div class="detail-list">
+        <div class="detail-item">保溫爐（一個手動開、一個定時自動）</div>
+        <div class="detail-item">飯鍋、茶機、茶杯保溫機、熱水機</div>
+        <div class="detail-item">配料雪櫃（先擦乾內部水份）、iPad、打印機</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1010</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0810</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">煮茶：茶葉 300g → P2 → Start</div>
+      <div class="detail-list">
+        <div class="detail-item">確認水位在 6L（不可過高過低）；輕搖茶器使茶葉平鋪再放入茶機</div>
+        <div class="detail-item">煮茶約 30 分鐘。週末忙碌時可先用 B mode 預熱水，節省時間</div>
+        <div class="detail-item warn-note">平日 2 壺通常足夠；若 4pm 前茶量低於 2.5L，詢問 DS 是否需再煮</div>
+        <div class="detail-item warn-note">週末需持續煮茶至少至 3pm，煮茶優先於接單</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1015</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0815</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">慢煮雞翅：每 10 分鐘翻動一次，共 30 分鐘</div>
+      <div class="detail-list">
+        <div class="detail-item">從風房取出，在 prep kitchen 水槽倒水後搬上 Show Kitchen</div>
+        <div class="detail-item warn-note">必須使用已預煮過的雞翅，不可使用生雞翅</div>
+        <div class="detail-item">完成後撈起瀝乾，放 2L 盒、貼標籤、送回風房（FIFO）</div>
+        <div class="detail-item">一盆預煮雞翅約 3–4 個 2L 雪糕盒</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1020</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0820</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">打蛋：依照 Preplist 核對需打幾盤<span class="task-sub">完成後清潔桌面並換新手套</span></div>
+      <div class="detail-list">
+        <div class="detail-item">½ 最多放 4 底；1 瓶滑蛋可放 2.5 底</div>
+        <div class="detail-item">滑蛋按比例加入淡奶、鹽、MSG → blender 攪拌 → 過篩 → 倒入容器 → 標籤 → 風房</div>
+        <div class="detail-item warn-note">鹽和 MSG 需先用小容器量，份量太少直接倒入 ½ 會不準確</div>
+        <div class="detail-item warn-note">盡量先完成打蛋再開設飲品站，防止交叉污染</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row warn">
+    <div class="time-col">
+      <span class="time-wd">1050</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0845</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">過濾茶 & 準備檸檬茶底　⚠ 開店前必須就緒</div>
+      <div class="detail-list">
+        <div class="detail-item">茶機完成後顯示 99°C / 4.5L；用網篩過濾兩個茶機去除茶渣</div>
+        <div class="detail-item">沖洗其中一個茶壺，倒回過濾茶，設定保溫模式（B mode → start）</div>
+        <div class="detail-item">用過濾茶製作檸檬茶底：無糖、少糖、正常</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row warn">
+    <div class="time-col">
+      <span class="time-wd">1100</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0840</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">設置飲品站　⚠ 開店前必須就緒</div>
+      <div class="detail-list">
+        <div class="detail-item">配料順序：紅豆 → 菠蘿 → 荔枝 → 檸檬 → 青檸（⅑）、薄荷葉（⅙）</div>
+        <div class="detail-item">已開罐的可樂與 7UP 放在 ⅙ 保冰</div>
+        <div class="detail-item">擺好糖漿、煉奶、蜂蜜、鹹檸七糖漿</div>
+        <div class="detail-item">器具歸位：網篩放入配料、蓋好蓋子；muddler 和雪糕匙分開放入裝水的杯</div>
+      </div>
+      <div class="fridge-wrap">
+        <div class="fridge-lbl">配料冰箱配置（俯視）· 由左至右順序</div>
+        <div class="pans">
+          <div class="pan" style="border-color:#F09595">
+            <div class="pan-fill" style="background:#FEF0EF"><div class="pan-name" style="color:#791F1F">紅豆</div><div class="pan-en" style="color:#A32D2D">Red bean</div></div>
+            <div class="pan-lbl">¼ GN Pan</div>
+          </div>
+          <div class="pan" style="border-color:#FAC775">
+            <div class="pan-fill" style="background:#FEF5E6"><div class="pan-name" style="color:#633806">菠蘿</div><div class="pan-en" style="color:#854F0B">Pineapple</div></div>
+            <div class="pan-lbl">¼ GN Pan</div>
+          </div>
+          <div class="pan" style="border-color:#ED93B1">
+            <div class="pan-fill" style="background:#FBF0F5"><div class="pan-name" style="color:#72243E">荔枝</div><div class="pan-en" style="color:#993556">Lychee</div></div>
+            <div class="pan-lbl">¼ GN Pan</div>
+          </div>
+          <div class="pan" style="border-color:#C0DD97">
+            <div class="pan-fill" style="background:#EEF6E0"><div class="pan-name" style="color:#27500A">檸檬</div><div class="pan-en" style="color:#3B6D11">Lemon</div></div>
+            <div class="pan-lbl">¼ GN Pan</div>
+          </div>
+          <div class="pan" style="border-color:#9FE1CB;display:flex;flex-direction:column;">
+            <div style="flex:0 0 20%;background:#E5F6F0;display:flex;align-items:center;justify-content:center;gap:3px;border-bottom:1px dashed #5DCAA5;">
+              <span style="font-size:9px;font-weight:500;color:#085041;">青檸 Lime</span>
+              <span style="font-size:9px;color:#0F6E56;">⅑</span>
+            </div>
+            <div style="flex:1;background:#EEF6E0;position:relative;padding:6px;">
+              <div style="font-size:8px;font-weight:500;color:#27500A;line-height:1.7;">可樂 Cola<br>七喜 7UP</div>
+              <div style="position:absolute;bottom:5px;right:5px;width:34px;height:34px;border-radius:50%;background:#C0DD97;border:1px solid #639922;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div style="font-size:7px;font-weight:500;color:#27500A;text-align:center;line-height:1.3;">薄荷葉<br>Mint</div>
+              </div>
+            </div>
+            <div class="pan-lbl">¼ GN Pan（共用）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1100</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0900</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">盛裝焗豬白飯至淺盤冷卻後裝盒</div>
+      <div class="detail-list">
+        <div class="detail-item">準備給隔日使用的炒飯底</div>
+        <div class="detail-item">週五、週六不需要備（週末不售焗豬）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1100</span><span class="time-label">平日</span>
+      <span class="time-wd" class="time-sep">0900</span><span class="time-label">週末</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">協助其他工作站</div>
+      <div class="detail-list">
+        <div class="detail-item">飲品站任務較少，應比其他站更早就緒</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1130</span><span class="time-label">平日</span></div>
+    <div class="content-col">
+      <div class="task-name">放出餐雞翅（2L × 2）</div>
+      <div class="detail-list">
+        <div class="detail-item">放入後保溫爐調至 80°C，約 10 分鐘後記得攪拌</div>
+        <div class="detail-item warn-note">雞翅放入 bain marie 最遲：平日 11:30 / 週末 11:20</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1145</span><span class="time-label">平日</span></div>
+    <div class="content-col">
+      <div class="task-name">調味羅宋湯</div>
+      <div class="detail-list">
+        <div class="detail-item">先加 25ml（1 shot）檸檬汁，再按需調整</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#D4537E"></div>
+    <span class="sec-title">服務中 Service</span>
+    <span class="sec-time">1200 起</span>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1200</span><span class="time-label">起</span></div>
+    <div class="content-col">
+      <div class="task-name">出餐優先，同時留意煮飯情況</div>
+      <div class="detail-list">
+        <div class="detail-item">通知同伴是否繼續煮下一批飯；飯煮好後協助盛起冷卻</div>
+        <div class="detail-item">平日忙碌時段協助 Pass：裝雞翅、裝湯、盛飯、換飯煲、包外賣等</div>
+        <div class="detail-item">週末高峰時段器具可留水槽讓炸爐站協助清洗，不忙時應自行清洗</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row warn">
+    <div class="time-col"><span class="time-wd">全日</span></div>
+    <div class="content-col">
+      <div class="task-name">離開崗位前確認水吧存貨充足</div>
+      <div class="detail-list">
+        <div class="detail-item warn-note">配料、糖漿、豆奶、奶蓋等必須維持一半以上</div>
+        <div class="detail-item warn-note">勿讓接手的人替你補充存貨</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#BA7517"></div>
+    <span class="sec-title">下午備料 Prepare</span>
+    <span class="sec-time">1200 起，最遲 5pm 完成</span>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1200</span><span class="time-label">起</span></div>
+    <div class="content-col">
+      <div class="task-name">依照 <a href="https://docs.google.com/spreadsheets/d/1Hos-i-0gBf6HOmVmqJVOI2Y9PvdXgB-bAgMdG-seLC0/edit?usp=sharing" target="_blank" style="color:#185FA5;text-decoration:none;border-bottom:1px solid #85B7EB;">Prep List</a> 完成當日備料</div>
+      <div class="detail-list">
+        <div class="detail-item">風房：檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</div>
+        <div class="detail-item">水吧：一般糖漿、荔枝/菠蘿罐頭糖漿、紅豆大罐頭（A 檯後下方）</div>
+        <div class="detail-item">¼ 檸檬片 ≈ 16 顆；⅑ 魷魚檸檬 ≈ 3–4 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉（袋）≈ 3–4 杯</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">隨時</span></div>
+    <div class="content-col">
+      <div class="task-name">超前部署：準備隔日開早茶葉與糖</div>
+      <div class="detail-list">
+        <div class="detail-item">準備：茶葉 300g × 2、糖 190g / 300g（放推車第二層）</div>
+        <div class="detail-item">補充：糖罐(KP)、淡奶(KP)、整包茶葉(E 檯)、養樂多、荔枝/菠蘿糖水(5L)</div>
+        <div class="detail-item">香草 & 巧克力冰淇淋（KP Freezer small）</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">備料後</span></div>
+    <div class="content-col">
+      <div class="task-name">若水吧備料完成，主動協助其他工作站</div>
+      <div class="detail-list">
+        <div class="detail-item">切黃油 / 青椒 / 火腿；擦蔥 / 西芹；洋蔥 / 紅蘿蔔去皮；剪辣椒等小 task</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1500</span></div>
+    <div class="content-col">
+      <div class="task-name">依照 Deep Clean Task 完成當日深層清潔</div>
+      <div class="detail-list">
+        <div class="detail-item">清潔茶機（週一至週五）：優先清潔較髒的茶機</div>
+        <div class="detail-item">清潔完後補水至 6L，用黃色噴噴擦拭茶機外面</div>
+        <div class="detail-item">保持層架整潔，容器及工具定期整理</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#5F5E5A"></div>
+    <span class="sec-title">準備收市 Soft Close</span>
+    <span class="sec-time"><span class="tag tag-wd">平日 1730</span><span class="tag tag-we">週末 1700</span></span>
+  </div>
+  <div class="task-row">
+    <div class="time-col">
+      <span class="time-wd">1730</span><span class="time-label">平日起</span>
+      <span class="time-wd" class="time-sep">1700</span><span class="time-label">週末起</span>
+    </div>
+    <div class="content-col">
+      <div class="task-name">確認 Closing Checklist，規劃可提前完成的項目</div>
+      <div class="detail-list">
+        <div class="detail-item">工作台做 2-step cleaning，保留一半繼續接單</div>
+        <div class="detail-item">先將墊子及部分工具拿去清洗（不忙時自行清洗器具）</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1900</span><span class="time-label">–1930</span></div>
+    <div class="content-col">
+      <div class="task-name">關閉後方保溫爐；最後一煲飯後關閉飯煲並清潔</div>
+      <div class="detail-list">
+        <div class="detail-item">沙爹牛肉、雞湯剩一半可換至 ⅙</div>
+        <div class="detail-item">雞翅集中放在同一個 ⅓，詢問 DS 是否保留另一個瑞士雞翅汁</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#2C2C2A"></div>
+    <span class="sec-title">收市 Closing</span>
+    <span class="sec-time">2000</span>
+  </div>
+  <div class="task-row warn">
+    <div class="time-col"><span class="time-wd">2000</span></div>
+    <div class="content-col">
+      <div class="task-name">所有配料、淡奶、煉奶等包保鮮膜放回冰箱</div>
+      <div class="detail-list">
+        <div class="detail-item">一般糖漿、蜂蜜、5L 糖水、青檸/檸檬汁不需要冰</div>
+        <div class="detail-item warn-note">紅豆冰奶、奶蓋等奶類必須冰在 Bar 1，確保夠低溫</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">2000</span></div>
+    <div class="content-col">
+      <div class="task-name">收拾所有糖漿瓶嘴及剩餘工具與容器去清洗</div>
+      <div class="detail-list">
+        <div class="detail-item warn-note">水吧器具只能在 Show Kitchen 清洗</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">2000</span></div>
+    <div class="content-col">
+      <div class="task-name">SOAP 清潔各區域</div>
+      <div class="detail-list">
+        <div class="detail-item">水吧檯面、製冰機、所有保溫爐、兩個飯煲</div>
+        <div class="detail-item">包裝區域、保鮮膜架、冰櫃等</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">2000</span></div>
+    <div class="content-col">
+      <div class="task-name">幫忙拿所有器具至 KP 清洗，食材放回風房</div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">隨時</span></div>
+    <div class="content-col">
+      <div class="task-name">隨時下樓拿乾淨工具回 Show Kitchen 並擺放歸位</div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">最後</span></div>
+    <div class="content-col">
+      <div class="task-name">再次確認及完成所有 Closing Checklist</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

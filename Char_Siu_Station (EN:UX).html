@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Char Siu Station — Daily Operations</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── Responsive tokens ── */
+:root{
+  --max-w:393px;
+  --pad-h:12px;
+  --pad-v:14px;
+  --time-col:68px;
+  --title-size:19px;
+  --sec-size:12px;
+  --task-size:12px;
+  --detail-size:11px;
+  --tag-size:9px;
+  --btn-size:12px;
+  --radius:10px;
+}
+@media(min-width:600px){
+  :root{
+    --max-w:680px;
+    --pad-h:20px;
+    --time-col:90px;
+    --title-size:22px;
+    --sec-size:13px;
+    --task-size:13px;
+    --detail-size:12px;
+    --tag-size:10px;
+    --btn-size:13px;
+    --radius:12px;
+  }
+}
+@media(min-width:1024px){
+  :root{
+    --max-w:860px;
+    --pad-h:28px;
+    --time-col:110px;
+    --title-size:24px;
+    --sec-size:14px;
+    --task-size:14px;
+    --detail-size:13px;
+    --tag-size:11px;
+    --btn-size:14px;
+    --radius:12px;
+  }
+}
+
+body{font-family:-apple-system,Arial,sans-serif;background:#f2f2f0;color:#2c2c2a;max-width:var(--max-w);margin:0 auto;}
+.sticky-header{position:sticky;top:0;z-index:10;background:#f2f2f0;padding:var(--pad-v) var(--pad-h) 10px;}
+.page-title{font-size:var(--title-size);font-weight:600;margin-bottom:1px;}
+.page-ref{font-size:calc(var(--detail-size) - 1px);color:#aaa;margin-bottom:8px;}
+.toggle-wrap{display:flex;background:#e0e0dc;border-radius:8px;padding:3px;gap:3px;}
+.toggle-btn{flex:1;padding:7px 0;font-size:var(--btn-size);font-weight:600;border:none;background:transparent;border-radius:6px;cursor:pointer;color:#888;transition:background 0.15s,color 0.15s;}
+.toggle-btn.active-wd{background:#fff;color:#0C447C;}
+.toggle-btn.active-we{background:#fff;color:#3C3489;}
+.page{padding:0 var(--pad-h) 40px;}
+.section{margin-bottom:18px;}
+.sec-header{display:flex;align-items:center;gap:7px;margin-bottom:8px;padding:8px 0 6px;border-bottom:1.5px solid #e0e0dc;}
+.sec-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.sec-title{font-size:var(--sec-size);font-weight:600;}
+.sec-time{font-size:calc(var(--tag-size) + 1px);color:#aaa;margin-left:auto;white-space:nowrap;}
+.task-row{display:grid;grid-template-columns:var(--time-col) minmax(0,1fr);margin-bottom:5px;border:1px solid #e4e4e0;border-radius:var(--radius);overflow:hidden;}
+.task-row.warn{border-color:#F09595;}
+.task-row.both{border-color:#C0DD97;}
+.time-col{padding:10px 8px;display:flex;flex-direction:column;gap:1px;background:#f8f8f6;border-right:1px solid #e4e4e0;justify-content:center;}
+.time-wd{font-size:calc(var(--detail-size) - 1px);font-weight:600;color:#2c2c2a;white-space:nowrap;}
+.content-col{padding:10px 13px;background:#fff;}
+.task-row.warn .content-col{background:#FFF5F5;}
+.task-row.both .content-col{background:#F6FBF0;}
+.task-name{font-size:var(--task-size);font-weight:600;margin-bottom:5px;line-height:1.35;color:#2c2c2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.task-row.warn .task-name{color:#A32D2D;}
+.task-row.both .task-name{color:#27500A;}
+.detail-list{display:flex;flex-direction:column;gap:4px;}
+.detail-item{font-size:var(--detail-size);color:#5f5e5a;line-height:1.5;padding-left:12px;position:relative;}
+.detail-item::before{content:'·';position:absolute;left:2px;color:#ccc;}
+.detail-item.warn-note{color:#A32D2D;font-weight:500;}
+.detail-item.warn-note::before{content:'⚠';left:0;font-size:9px;}
+.food-bold{font-weight:700;color:#2c2c2a;}
+.sub-group{margin-top:6px;padding-top:6px;border-top:1px dashed #eee;}
+.sub-label{font-size:calc(var(--tag-size) - 1px);font-weight:600;color:#bbb;letter-spacing:0.04em;margin-bottom:3px;padding-left:12px;text-transform:uppercase;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div class="sticky-header">
+  <p class="page-title">Char Siu Station</p>
+  <p class="page-ref">Times for reference only</p>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active-wd" id="btn-wd" onclick="setMode('wd')">Weekday</button>
+    <button class="toggle-btn" id="btn-we" onclick="setMode('we')">Weekend</button>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#D85A30"></div>
+    <span class="sec-title">Opening</span>
+    <span class="sec-time" id="open-time">From 1000</span>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t1">1000</span></div>
+    <div class="content-col">
+      <div class="task-name">Turn on induction & oven (max heat)</div>
+      <div class="detail-list">
+        <div class="detail-item">Help carry deliveries downstairs when stock arrives</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t2">1000–1010</span></div>
+    <div class="content-col">
+      <div class="task-name">Heat up items for bain marie</div>
+      <div class="detail-list">
+        <div class="detail-item"><span class="food-bold">Satay beef</span> — (⅓ GN Pan) 2L beef + satay sauce, black non-stick pan heat level 6, stir continuously, heat to 75°C then pour into GN pan</div>
+        <div class="detail-item"><span class="food-bold">Chicken soup</span> — (⅓ GN Pan) heat water first, add soup base, stir well, once boiling into bain marie</div>
+        <div class="sub-group wd-only">
+          <div class="sub-label">Weekdays only</div>
+          <div class="detail-item"><span class="food-bold">Borscht soup</span> — (⅓ GN Pan) heat water first, add soup base, cook until 11:45 then into bain marie; remind drinks to season with lemon juice</div>
+          <div class="detail-item"><span class="food-bold">Curry sauce</span> — (⅓ GN Pan) silver pot, heat level 5, prepare coconut milk & evaporated milk per SOP, add after boiling and turning off heat</div>
+          <div class="detail-item"><span class="food-bold">Tomato sauce</span> — (⅙ GN Pan) small black pot, usually 2 batches, heat to 75°C then pour into GN pan</div>
+        </div>
+        <div class="sub-group we-only hidden">
+          <div class="sub-label">Weekends only</div>
+          <div class="detail-item"><span class="food-bold">Tomato soup</span> — (⅓ GN Pan) heat water first, add soup base, stir well to prevent burning</div>
+          <div class="detail-item"><span class="food-bold">Sweet corn</span> — (⅙ GN Pan) 4 cans + 1 block butter + onion powder + garlic powder + MSG, silver pan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t3">1015–1020</span></div>
+    <div class="content-col">
+      <div class="task-name">Bring up items from walk-in</div>
+      <div class="detail-list">
+        <div class="detail-item">Whatever supervisor has put out ready to take</div>
+        <div class="detail-item">Char siu × 2 boxes</div>
+        <div class="detail-item">Loaf × 1–2 boxes</div>
+        <div class="detail-item">Squid</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t4">1020–1040</span></div>
+    <div class="content-col">
+      <div class="task-name">Marinade squid & prep peanut butter toast</div>
+    </div>
+  </div>
+
+  <div class="task-row warn">
+    <div class="time-col"><span class="time-wd" id="t5">1030</span></div>
+    <div class="content-col">
+      <div class="task-name">Put char siu in oven ⚠ latest by this time</div>
+      <div class="detail-list">
+        <div class="detail-item warn-note">2nd batch should be ready within 20 mins of opening</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t6">1030–1130</span></div>
+    <div class="content-col">
+      <div class="task-name">Arrange heated items into bain marie</div>
+      <div class="detail-list">
+        <div class="detail-item warn-note">Check temperature is over 75°C</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t7">1030–1130</span></div>
+    <div class="content-col">
+      <div class="task-name">Cut toast, label & put in walk-in fridge</div>
+      <div class="detail-list">
+        <div class="detail-item">Place at the bottom, ensure FIFO</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd" id="t8">1045–1200</span></div>
+    <div class="content-col">
+      <div class="task-name">Clean & prepare char siu station</div>
+      <div class="detail-list">
+        <div class="detail-item">Char siu warmer, scrambled egg, melted butter, chopping board, knife, weighing scale, tongs, gloves</div>
+        <div class="sub-group wd-only">
+          <div class="sub-label">Weekdays only</div>
+          <div class="detail-item">Place baked pork rice toppings: ⅑ cheese · ⅑ cooked onion · ⅑ pineapple</div>
+          <div class="detail-item">Label & put fried tofu and cooked onions into walk-in fridge</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#D4537E"></div>
+    <span class="sec-title">Service</span>
+    <span class="sec-time">From 1200</span>
+  </div>
+  <div class="task-row both">
+    <div class="time-col"><span class="time-wd">All day</span></div>
+    <div class="content-col">
+      <div class="task-name">Keep sink area clean</div>
+      <div class="detail-list">
+        <div class="detail-item">Take orange box to KP for washing when full</div>
+        <div class="detail-item">Regularly clean chopping boards, knives, cloths; keep station tidy</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1200+</span></div>
+    <div class="content-col">
+      <div class="task-name">Focus on service</div>
+      <div class="detail-list">
+        <div class="detail-item">Besides roasting char siu & cooking scrambled eggs, support pass: plating onion / pork chop / tofu / eggs etc.</div>
+        <div class="detail-item">Support fryer station: boxing pork chops etc.</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1200–1430</span></div>
+    <div class="content-col">
+      <div class="task-name">Continuously roast char siu during peak hours</div>
+      <div class="detail-list">
+        <div class="detail-item">Unless char siu sales are slow</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#BA7517"></div>
+    <span class="sec-title">Afternoon Prep</span>
+    <span class="sec-time">Finish by 5pm</span>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1400–1700</span></div>
+    <div class="content-col">
+      <div class="task-name">Complete today's prep list before 5pm</div>
+      <div class="detail-list">
+        <div class="detail-item">Most big tasks (e.g. cut bread & buns) should be done before opening</div>
+        <div class="detail-item">Items like onions and spring onions take more time — prep these first</div>
+        <div class="detail-item">Smaller tasks can be prepared in the afternoon</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1500–1700</span></div>
+    <div class="content-col">
+      <div class="task-name">Keep at least half a tray of char siu ready</div>
+      <div class="detail-list">
+        <div class="detail-item">During off-peak hours</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row warn">
+    <div class="time-col"><span class="time-wd">1700–1730</span></div>
+    <div class="content-col">
+      <div class="task-name">Start roasting char siu for dinner service</div>
+      <div class="detail-list">
+        <div class="detail-item warn-note">Aim to restock to 80% full by 6pm</div>
+      </div>
+    </div>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1800–1930</span></div>
+    <div class="content-col">
+      <div class="task-name">Monitor char siu usage during dinner service</div>
+      <div class="detail-list">
+        <div class="detail-item">Usually the last tray needs to be roasted until 19:00–19:30</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header">
+    <div class="sec-dot" style="background:#5F5E5A"></div>
+    <span class="sec-title">Soft Close</span>
+    <span class="sec-time">From 1730</span>
+  </div>
+  <div class="task-row">
+    <div class="time-col"><span class="time-wd">1730–1830</span></div>
+    <div class="content-col">
+      <div class="task-name">Review & complete Closing Checklist</div>
+      <div class="detail-list">
+        <div class="detail-item">Check at 1730 to plan what can be done earlier</div>
+        <div class="detail-item">Ensure enough time for closing and finishing on time</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var times = {
+  wd:["1000","1000–1010","1015–1020","1020–1040","1030","1030–1130","1030–1130","1045–1200"],
+  we:["0800","0800–0810","0815","0820–0830","0830","0835","0900","Before 0900"]
+};
+function setMode(m){
+  var isWd=m==='wd';
+  document.getElementById('btn-wd').className='toggle-btn'+(isWd?' active-wd':'');
+  document.getElementById('btn-we').className='toggle-btn'+(!isWd?' active-we':'');
+  document.getElementById('open-time').textContent=isWd?'From 1000':'From 0800';
+  times[m].forEach(function(v,i){document.getElementById('t'+(i+1)).textContent=v;});
+  document.querySelectorAll('.wd-only').forEach(function(el){el.classList.toggle('hidden',!isWd);});
+  document.querySelectorAll('.we-only').forEach(function(el){el.classList.toggle('hidden',isWd);});
+}
+setMode('wd');
+</script>
+</body>
+</html>
