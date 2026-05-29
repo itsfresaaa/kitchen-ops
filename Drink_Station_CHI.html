@@ -3,463 +3,539 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>飲品站 每日工作流程</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Drink Station · Daily Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --max-w:393px;
-  --pad-h:12px;
-  --pad-v:16px;
-  --time-col:68px;
-  --title-size:19px;
-  --sec-size:12px;
-  --task-size:12px;
-  --detail-size:11px;
-  --tag-size:9px;
-  --radius:10px;
-  --pans-h:150px;
-  --pan-name:10px;
-  --pan-en:8px;
-  --pan-lbl:7px;
+body{
+  font-family:'Roboto Condensed',sans-serif;
+  background:#fff;
+  color:#000;
+  max-width:402px;
+  margin:0 auto;
+  padding:0 0 80px;
 }
-@media(min-width:600px){
-  :root{
-    --max-w:680px;
-    --pad-h:20px;
-    --time-col:90px;
-    --title-size:22px;
-    --sec-size:13px;
-    --task-size:13px;
-    --detail-size:12px;
-    --tag-size:10px;
-    --radius:12px;
-    --pans-h:185px;
-    --pan-name:12px;
-    --pan-en:10px;
-    --pan-lbl:9px;
-  }
+@media(min-width:500px){body{max-width:100%;padding:0 40px 80px;}}
+
+/* HEADER */
+.header{text-align:center;padding:22px 20px 0;}
+.logo{width:157px;height:44px;object-fit:contain;display:block;margin:0 auto;}
+.daily-ops{
+  font-weight:900;font-size:9px;line-height:11px;
+  letter-spacing:0.72em;color:#F93B1D;
+  text-align:center;text-transform:uppercase;
+  margin-top:5px;padding-right:0.72em;
 }
-@media(min-width:1024px){
-  :root{
-    --max-w:860px;
-    --pad-h:28px;
-    --time-col:110px;
-    --title-size:24px;
-    --sec-size:14px;
-    --task-size:14px;
-    --detail-size:13px;
-    --tag-size:11px;
-    --radius:12px;
-    --pans-h:200px;
-    --pan-name:13px;
-    --pan-en:11px;
-    --pan-lbl:10px;
-  }
+
+/* TOGGLE */
+.toggle-wrap{
+  display:flex;margin:14px 51px 0;
+  border:1px solid #F93B1D;overflow:hidden;
 }
-body{font-family:-apple-system,Arial,sans-serif;background:#f2f2f0;color:#2c2c2a;max-width:var(--max-w);margin:0 auto;padding:0;}
-.sticky-header{position:sticky;top:0;z-index:10;background:#f2f2f0;padding:var(--pad-v) var(--pad-h) 10px;}
-.page-title{font-size:var(--title-size);font-weight:600;margin-bottom:1px;}
-.page-ref{font-size:calc(var(--detail-size) - 1px);color:#aaa;margin-bottom:2px;}
-.page-sub{font-size:calc(var(--detail-size) - 1px);color:#aaa;}
-.page{padding:0 var(--pad-h) 40px;}
-.section{margin-bottom:18px;}
-.sec-header{display:flex;align-items:center;gap:7px;margin-bottom:8px;padding:8px 0 6px;border-bottom:1.5px solid #e0e0dc;}
-.sec-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.sec-title{font-size:var(--sec-size);font-weight:600;letter-spacing:0.01em;}
-.sec-time{font-size:calc(var(--tag-size) + 1px);color:#aaa;margin-left:auto;white-space:nowrap;}
-.tag{display:inline-block;font-size:var(--tag-size);font-weight:600;padding:1px 5px;border-radius:3px;margin-left:2px;}
-.tag-wd{background:#E6F1FB;color:#0C447C;}
-.tag-we{background:#EEEDFE;color:#3C3489;}
-.task-row{display:grid;grid-template-columns:var(--time-col) minmax(0,1fr);margin-bottom:5px;border:1px solid #e4e4e0;border-radius:var(--radius);overflow:hidden;}
-.task-row.warn{border-color:#F09595;}
-.time-col{padding:10px 8px;display:flex;flex-direction:column;gap:1px;background:#f8f8f6;border-right:1px solid #e4e4e0;justify-content:center;}
-.time-wd{font-size:calc(var(--detail-size) - 1px);font-weight:600;color:#2c2c2a;white-space:nowrap;}
-.time-label{font-size:calc(var(--tag-size) - 1px);color:#bbb;white-space:nowrap;}
-.time-sep{height:6px;}
-.content-col{padding:10px 13px;background:#fff;}
-.task-row.warn .content-col{background:#FFF5F5;}
-.task-name{font-size:var(--task-size);font-weight:600;margin-bottom:5px;line-height:1.35;color:#2c2c2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.task-row.warn .task-name{color:#A32D2D;}
-.task-sub{font-size:calc(var(--detail-size) - 2px);font-weight:400;color:#aaa;display:block;margin-top:-3px;margin-bottom:5px;}
-.detail-list{display:flex;flex-direction:column;gap:4px;}
-.detail-item{font-size:var(--detail-size);color:#5f5e5a;line-height:1.5;padding-left:12px;position:relative;}
-.detail-item::before{content:'·';position:absolute;left:2px;color:#ccc;}
-.detail-item.warn-note{color:#A32D2D;font-weight:500;}
-.detail-item.warn-note::before{content:'⚠';left:0;font-size:9px;}
-.fridge-wrap{border:1px solid #e0e0dc;border-radius:8px;padding:8px 8px 5px;background:#f8f8f6;margin-top:10px;}
-.fridge-lbl{font-size:calc(var(--tag-size) - 1px);color:#bbb;text-align:center;margin-bottom:7px;}
-.pans{display:flex;gap:4px;height:var(--pans-h);}
-.pan{flex:1;border-radius:5px;border:1px solid #ddd;display:flex;flex-direction:column;overflow:hidden;}
-.pan-fill{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
-.pan-name{font-size:var(--pan-name);font-weight:600;}
-.pan-en{font-size:var(--pan-en);opacity:0.6;}
-.pan-lbl{font-size:var(--pan-lbl);color:#bbb;text-align:center;padding:2px 1px;}
-@media print{
-  body{background:#fff;}
-  .sticky-header{position:static;}
-  .task-row{break-inside:avoid;}
+.toggle-btn{
+  flex:1;padding:8px 0;
+  font-family:'Roboto Condensed',sans-serif;
+  font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  border:none;background:transparent;
+  cursor:pointer;color:#999;transition:all 0.15s;
+}
+.toggle-btn.active{background:#F93B1D;color:#fff;}
+.toggle-btn:not(:first-child){border-left:1px solid #F93B1D;}
+.time-ref{
+  font-size:7px;color:#BBB;text-align:center;
+  margin:4px 51px 0;letter-spacing:0.08em;
+  font-family:'Roboto Condensed',sans-serif;
+}
+
+/* STATION TITLE */
+.station-wrap{padding:14px 51px 0;}
+.station-name{
+  font-weight:700;font-size:12px;line-height:14px;
+  color:#F93B1D;text-align:center;
+  letter-spacing:0.08em;margin-bottom:8px;
+}
+.station-line{
+  width:100%;height:0;
+  border-top:1px solid #F93B1D;
+}
+
+/* SECTION */
+.section{padding:12px 51px 0;}
+.section-label{
+  font-weight:700;font-size:12px;line-height:14px;
+  color:#F93B1D;margin-bottom:10px;
+}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:42px;}
+
+.tl-item{position:relative;margin-bottom:10px;}
+
+/* vertical line — sits behind everything */
+.tl-item::before{
+  content:'';
+  position:absolute;
+  left:-22px;
+  top:20px;
+  bottom:-10px;
+  width:0;
+  border-left:0.8px solid #F93B1D;
+  z-index:0;
+}
+.tl-item:last-child::before{display:none;}
+
+/* dot */
+.tl-item::after{
+  content:'';
+  position:absolute;
+  left:-25px;
+  top:12px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:#F93B1D;
+  z-index:1;
+}
+
+.tl-time{
+  position:absolute;
+  left:-41px;
+  top:9px;
+  font-weight:700;font-size:8px;line-height:9px;
+  color:#F93B1D;
+  white-space:nowrap;
+  text-align:right;
+  width:14px;
+  z-index:2;
+  background:#fff;
+  padding:1px 0;
+}
+
+/* CARD */
+.card{
+  background:rgba(245,245,245,0.54);
+  border:0.5px solid #F93B1D;
+  border-radius:5px;
+  padding:8px 10px;
+  position:relative;
+  z-index:1;
+}
+.card-title{
+  font-weight:700;font-size:8px;line-height:9px;
+  color:#F93B1D;margin-bottom:5px;
+}
+.card-body{
+  font-weight:500;font-size:6px;line-height:9px;
+  color:#000;
+}
+.card-body.center{
+  text-align:center;letter-spacing:0.1em;
+}
+.card-item{margin-bottom:2px;}
+.card-item.warn{color:#F93B1D;}
+.card-item.hidden{display:none;}
+
+/* CHECKBOX replacement */
+.cb{
+  display:inline-block;
+  width:8px;height:8px;
+  border:1px solid #F93B1D;
+  border-radius:1px;
+  margin-right:2px;
+  vertical-align:middle;
+  position:relative;
+  top:-1px;
+}
+.cb::after{
+  content:'✓';
+  position:absolute;
+  top:-2px;left:0;
+  font-size:7px;
+  color:#F93B1D;
+  font-weight:700;
+  line-height:1;
+}
+
+/* FRIDGE */
+.fridge{
+  margin-top:8px;
+  border:0.5px solid #F93B1D;
+  border-radius:4px;
+  padding:6px 6px 5px;
+  background:rgba(245,245,245,0.4);
+}
+.fridge-label{
+  font-size:6px;letter-spacing:0.1em;text-transform:uppercase;
+  color:#F93B1D;text-align:center;margin-bottom:6px;
+  font-weight:700;
+}
+.pans{display:flex;gap:3px;height:80px;}
+.pan{
+  flex:1;border-radius:3px;
+  border:0.5px solid #F93B1D;
+  display:flex;flex-direction:column;overflow:hidden;
+  background:rgba(255,255,255,0.8);
+}
+.pan-icon{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:4px 2px;
+}
+.pan-icon img{width:100%;max-width:36px;height:auto;}
+.pan-en{
+  font-size:5.5px;font-weight:700;color:#F93B1D;
+  text-align:center;letter-spacing:0.05em;
+  padding:2px 2px 3px;
+  border-top:0.5px solid #F93B1D;
+  line-height:1.2;
+}
+.pan-split{
+  flex:1;border:0.5px solid #F93B1D;border-radius:3px;
+  display:flex;flex-direction:column;overflow:hidden;
+  background:rgba(255,255,255,0.8);
+}
+.pan-split-top{
+  flex:0 0 55%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  border-bottom:0.5px dashed #F93B1D;padding:2px;
+}
+.pan-split-top img{width:100%;max-width:28px;height:auto;}
+.pan-split-bot{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:2px;
+}
+.pan-split-bot img{width:100%;max-width:22px;height:auto;}
+.pan-split-en{
+  font-size:5px;font-weight:700;color:#F93B1D;
+  text-align:center;padding:2px 2px 3px;
+  border-top:0.5px solid #F93B1D;letter-spacing:0.05em;
 }
 </style>
 </head>
 <body>
-<div class="sticky-header">
-  <p class="page-title">飲品站 每日工作流程</p>
-  <p class="page-ref">時間供參考</p>
-  <p class="page-sub">Drink Station — Daily Operations</p>
+
+<div class="header">
+  <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAToAAABYCAYAAABlCTu5AAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAABHmElEQVR4nO29d5xl2VXf+107nHPuvXWrqqtz93SYnpwHZQFKDAKETDI2YMCAjQMYm2ewZIxtgpHJIIEND4cP9ntgbPPBGGP8LEAgJCRQ1jAjjSbn6Z4O1RVvOGHvvd4f51Z3jzSSZqarq6rH9ft8arpquuuevc9ZZ+0Vfwu2sY1tbGMb29jGNraxjW1sYxvb2MY2trGNbWxjG9vYxja2sY1tbGMb29jGNraxjc8K2ewFbOO547uu7OuemT4zWcF0t8OOok8PDwFEFYwBDGWoWRmNWa4qzo4GnFxZ5t+cXN5+1ttYN3z30Rk90J9hT96lnxVMdQoy71FVUkqICMZaximxtDrg9OoKS6MBp5eX+dX5asNlUd42nWswMPaRaBJZBJsMqGfVe+anevzGI09fli/Jt199he5YWWGqaRAaokk0FsBQNJZl3+NfnV7Ysnv7qb079GXXHGXWwVQueBNJqabRGrGQqWOqdLhkEAUVQIUohiiGxhqCc5QWhghLdcWTS2d56Onj/MSJsGX3vYa/d81hzVeWKUKJSQERJVkBNWhUzuZd/t3JlS21j7+7a1Z3e0carNDJPVUMBAPN5BCyCjZBFgEJhLwiBOgZIZaGVDv8jt0cR3k6E/7nE09tif294+huveHAHvZOdyhsIGmDxECmGVZBlHN7EwWz9ovGklRoFKIB8RkRYXU85vR4zPvvfZAfG+gl36Oceu0rtXLKIEskSfgIRh0Jz2Le4f0LZ3jLn9+1JW7288Uvf/HL9GXTM8zUY6w2qAk0BowaisZwsjPDq//3H22pvf3AsYP6igMHubrbYQ+KXVmgK4HcRYSGRisaGqJTHI6scfjYipUogKACCUMwhkaE2hii8wTvqKxlEAKDccnZBB99/DQ/enxrWnv/7c1fqodJ9JoRPjUIAYxt/zJaTnT6vO5/vXvLrP0dr7xFX71nHzuqCl+PsRpJzlBbCMag0j4jlyAPYAhUUmGS0k0F3k0xJud4gsenu3zj7/7upu7tB288pK/au499KbJXEn2JuDAm6Rg1obXasIgazETRmQRGL3AVVcC0h29CUOtIRmhCYikGmqlpTibhvpVlPvLk0/z7k+Ul2bPbWa9SpYQ3rUWXB4NNlqgdEGFft3MprrshONifYqYp2dGMMIxBIsGkiaKzjLJss5d4Dr986yG9/sAB9vmMblOTD+ax1Zi53GO1hhghBYxGrICoJRlobEPlpBWuibCJtsrcYnDWkiVo6pLYGLo+Z8ZYNPfUarj26sO86dpM/+zkU3z/vae2jNIAODI7xfT8SfrNEK8VhoCKAAZJhpXgNnuJ5/CzLz+gr7qizxX1KlNpREFN04xIWGqF2rbvvEtriq6VQ9ctWFxcJU8VfjpjQSNnrfCNv/uuTXsWv37TjXrzzhlmY8UODXgqjDZorEnaYEmtrAESA3DeghPOazkVaFTBWZKxRFECQjKW5IXMCMkMOOhyDnf6vGbXLN88TvoXp+b5vnuPr+v+nU1jipioYyRqohMMLnoihtJl2Lpcz+ttKEw1ogt0QoWVCqShISFqKJIlT9VmL5Ffu32fXtfJ2dmfJo+rmGGJT4GeGLJcsbGGpKARVUXE4USQJDQCSSJJEiqt2xBpBTCRMCQ0JEQFk0AkQVRULKqKQ5hxOTsI7D52lJddfbW+6+HHeduntoa7FJeX6MaKXqjIdAwE1AiKgWTINWz2EgH4tdcf0i/YdwA3fwozrvExQjOml3maJDggAxLtQZTFNc/JUq4GZoseqjnHRwOezD1v/pM7N+X+v/26o/qVx65hf6zJlxfJfSKuLIFJJJ9QIzix2GSQAEpErJAkYfT856QLVm8m34smUgIhIjHhrME4Q2hKbD0ir5W+WnZnfQ4d2slVc1N69/KYf/7JJ9blXjhiIBklaWiDiAlMBJMc3tb4uB6X2Ry4JmEJuNBgaYi2buNYyZASpLR5L8rfOWD1q267mWvDCrs04NIixIQzicxZSA2pDgS1KAJiwTgESzIegJQUrzXE1J6krLmvLRKgk9idOIs1BhULplV0qhEnJb0m4k6PmfI9jhy6ii/Zd1T/53338o4TZzdV4dmmIasDvqkx1CANkfZ+SPLE2Gzm8gD47y/Zoy/Lp5haXCKNx8x6iyURE0jXo+XonGtnaA8jNCERVIXhIDB7aCdPN5EHmhW+8r2f3PB7/tPXTOsbbrqFnSGRLz5JaipEIiEE3JSlQQkRJBryZJHoIVpEACrUJtKa3InSimLCpvbQZRJaySemniZBVWlswllwhWA8xLrC1Q391GN31uGGnXO8+g0H9Y4/+cBF3xOHtTijGKsggovgjIBavFhUL19NpzHhM0tmLCKCGNveczFYtVhrN2Vd//WLrtPbDuzDnz3FXFMzJQlQmqYhNBVRBO89zmekqLQOgUEEFEcENEHShMcgtHGRJOmCq2gbHrGWpIpqIkYlEtpgvipIwuSCtZGZABIq0soCPV/QveZKXnbNYf2W926OdQGQOY8zhswIFiGJRawQsTBxyzcTv/nqK/U1c7PkC/M4Et4JqRxjDFjvGC+vknd6JMDrJEYngCQQCJIzc/ggd59Z5iFqvuGjD2z4vf6j116vhzOhuzqPjMdMO8tUx5OaQFXVlM1Eg6nBYFBADBNlpqg4Eu1+OCd/CaOtq2pE0BBbr8KY9rAWhQQ2JYpOD40V42qAxgorjkzGZKnBBUtmSx76xq/Q37nvAd561yMv+P44GksiEKOQRIkRbFQkJpqkVBeaCJcZapSQhJAUK62FkyKAgShoNJ/nE9YX/+jgjH7VNVdznYOdT53Cp0DSgiq2GcVO0UE6HiQSm4o6VBhnAUUkoElIEtEkYC5IPjCx3mTtO0ASCoTUWj0CCAYPiFiMNai1LDYlxhj6PpFrg4k1O8oVrssydnc7/N4brtWv+pONfwEBaiCkREqpdd1NIkVHRJAopLh5BudvvvKIfvEVB5CnT2Gj4nKPGqilQZ0nczku5lBZrLYZV8XQGEgmUZrE0HY4Pqr5wHDI37/30Q3dzFv37tWvu/1G9q8+yW6tWyXkBdXI0mCMQZjqztBUNcaAMQaRNnsaUkWTIkSlsPn5jD9p4rYqOlF6RoQ4cW2dAU/r6iJgxTE+uUhRFHS705AbNJZUqSKlCnHCgQJOP/lJvvHwQW7ZOadf8e6PvqD75HCKGsEnQzQeJJGMICSSVYzdOgHf5wtbeJKG1l9QQcRiMYCgRnhGYOES48eu2aNvuPIKrnWG/uIyfnUMPsPkHiMWg5JiQocNTTNGrOCKghAb1CiotlaYArRC5405p6wvTNC3308ysQIGaU9WVSS1Lqs2NSFBXmRYa7EVxLLBaMJ4ywxDGA34gtlp/viNx/Rdj57gpx66NBmxz4aoAWPaZ6XJtnWCYnE4lDXXaePxp2/8Ar1xZ4fVxx5k2uV0pzqMx2OSKp2pWUajEUsrS+zeMUcaB0ySifwJiKd0hpVcWMh7/O97HueHHjuxoTv55RuP6asOHWN/qtjtHK4ZUcdEcgab5aj3pJCIMbZr1kQMgaiBRpRoBc0MxjiaOk0UObQyl84ljCAhxiBEkipREk0qidpgrKMwkc6uKSgDqayIjZC8oJJhrGBNQoaL7JKM0dmnuLm3iz/50pfr/7z/Ed7x5PMLq7jgxyQcReNJBpI01C5hU020FWHrl1t9VqipSVREU7VxEW0TLapKkoYgG5OM+I9X79Y3XLOfqWYZXR2Dy6E/AxFWZEg0iQLIMDgB63JUErEBjG8VoCSMWXPXEhoiIbTWmpVW6BCLqkFTaq0+QGRi8YngpLXsEhEjgliIqYYqIVWB0ZzSQ5CazEQ6PpJXCxwb1HzHddewxx3X779v4+oOxSSE1hqIpj2gYJK+JIFsbIz1n87u0m+46UqOUKFPP8DObqCqx5jYI8860EAzaPAupzfjGMQxIiW5M/isC8FQVolxfwdPdHP+80fv5N8cH27oC/Zfbt2vrzu4h2z1FJ2mxlKB8TgLZWgIscJaizOWpirJvCU2FSqCzzxeLFWIxCBYY4m0mVSbWtVmcK2nIW28v6kC1kmbtCARTYO6RLA1gQoXlkECyXUweR+VgqYOmGDxJmGMw0pETYOW81xdzPANNx6kW1T64w8OnvO9c8HGtranyTEKlZfW/DQRlcAknHiZQltXzwQ0gajBJkOcmNa6AW75f7r9Kn3llGP3eBmq5TZjaB2NKMkJWZERY4XTVnBS1TCux1ifUUxPMSpLpOiR8oxhigyqmqDguxlZ0SEAIUEIgRRa99aKoXCe3BpoKgpjsLGBcozECi+KR4lNjcRI4TrYrIBgW2XoLDUN9WBAYYWjMzs5fvoUr9+9h5/N+vrWux/foJcznftSDIigCAYzUXLp8/z++uFH916hf/Xm6zmSRrjVeYxX6liT50UbL20aCAaiIWqiIaAmMD3doVxZIQ4DjesymNnJE9bx2t99/4ZbEP/h1Yf0Jd0+naUzTKvBmERTVag1WO/IihxESCmhKWKNITWhTYCpMGqEkHlCp09lHbUK0RiaGCG27q21FmMMGhMaG7qdnNg0ECtMCliT2ihzijRhRIw1WeYQ9YSmPdALm2NNjqSKmBrEJCxKhoKOOer7vGn/Xqbp6A88eOY53UeXPosHZ9Qgk6/LFaJyLr0NrSGQpPX+2u8v7Yvyizcc1Vcc2s/ceJlUDrE4Cl+Q1FDqEIslKwMuRaoYGEskyzKynX2amDg9HiLdPosKp8eRk3Xg+KjmiYUl3v745y/y/Z4DuR6dm+HK2WmOTHfY4XL6sRUYGwOmcZgobSdMaqCu8AFsYUj9Dm7WMy6HpKpiNvdMe8vcgcPIQqVveerkFjD1N0Y2f+TIDv3qq/az360i1QC1SgodvMuJUUkhQqM4teAsjYEoEVxGHSJNsqjkhJmd3KuGN/7+xWcRny/+9TW79I17j5ANlyYJfEezuoqfnaKuK0ZNRYpgnMUgOAOODIuCzYgmYyiW07nnuBUeGA14bGmZwWrNv3n487uRbznY0+vmdnOsP8fevGBaLbmOGbFIsgkXDZIUmgaVmtpG1CbUt+1kVjwJYRQjeZN4udvBFXv3UpZd/ZEnP//B61q3hknw8DMF5zLORXwOXHpL4KePHtAvO3wF2fJZoIQERjJQRwoBIeKtx1Q14jyu02WoDcsCFZEy8wzyDo+eXeYTx0/yL55+/pH3Xz5RCSdOA6cB+Ge70dsP7eXqPTvpW3D1iJ3OUpcVKjWdrscmj0kRrROKpTBTjFdX2D3dpyqHzI7hq687xkkd6s8dX91UZbcRIdZ/dl1P33zsIMdMSTh9ilKEIuvgKLBqSfUISYJgEN9anWjT9h4nQ1kHzNQuhvkU9wxL3vjeezf8nr3t5n36FVccpXPmDCGN8Z2MFAO1iVSjJYw3uI5DkxC07aqpcZRiWG0qcJ5lNXzq7CIfevokP3+2ed57+LnjQ+H4EHgMgLfvv1Kv3L2Dm666mrAyjyuHzImws2uBikRJRYM4ad9WMW3mt4mYckTWKFcY4c1XHmKhWtVf/DytnC5JwmrrnqZn/aeXs0XX9oBeqKx1YtFN4sOXDN94y030F59GZUzhBVFLqCIhVIgqmQltGU+swbVxuLE4VosOx43hvU8+wY98an37OH/8DMKZU8ApfujlN+gbrroZXVyib1ep3IhBKtlRj8iSpYgWt5rIXc6U38loVGLzDC1X2CmGb7vtOn7u+EfXc3nPG5fa2/jJlx/Srzy0i/7ZE2QmMjPrGAxqNFq8m6IaNeS2QzIBrNLYthc5pgaTDJoczu5guTPD+wbLfPMmKLl/eLijbzy4n0PakMZDKAQNNYO6oTudsbyyQjcvsNZTB1B1GN+lMjkLIixOed7/yMP8o/vm13Xt3//0o8LTj8Ld8I5br9fXXHUldrBMWjjDrlwxhUerMS45mtgQnOKMY1dQfANQY1LkqFG+9aU38ovvfP/nvJ67fNXYc8XGGx0f+LLX69TKaYp6iVhEjM3QKKgYnLFkpm2dSVVFzDqsRKg7HeZ9zrsffYR/+MClb1R/20fulbd95F5+9tgRffmBWQ7s2oGtFoj1WabV0rd9LB3aDFXAWYfF0M2VcbXEzpTxri+5Rt/47ge3gAu7/nj79Qf0jn372T9cwKcSQoVGTy8riMnSxAYVaeO+KjRSE1JNkoDJHI6ckXSZtz0+fHyRb77zvk25T19/000cGA/RpqLjhShKkxI2gzqUzO7o0TSB8bgiShfpzrFkcu6dX+DOM/P80ycufdH49919n3D3ffzKTUf0dYf3E8pV/GiRns0QMaAQk8Go4nUSa7MJ0YZ+VXPATfO7d7xCv+aPP/xZ12ravsjJD59WVQ+TaobLFGvWm06Katesu7U9Xwq3/Pdf9XK9SSJmOE+WR5pQUjUlpUQ0M+S+wIiFBKV6Vqd2srD3MO9cHnDrH/yFbISSuxBvfeRxef3775L3P3mK1egw09OE3DBMY0ZpSONhtW7IzDR2kDBNwvvIeHiCY3sK3nbzjstZRJ4V/+9NV+p3XH0Nh0+dwZ9dZLboYyRneWWMBIsDyrSKyWPbXaOgGghaI04xHcdYHE8E5Z1nzmyakvu1lx7V64G5ckTQmipri9ItinNCVa+S6opY1gie1J3lKc141/F53vSx+2UjlNyF+O57Hpcb3/lB+aPxKml6P7mfI6UCIcPRdgONpKZyDY2vKc0Ynwb0BvPckme8/earPqssmjWmgbUdfYabdxmf12su6qdjbY/rbc3+y2uv0GtcxC08TTeLiFMyZ87VsCWUEAJVFRmZjPHcLu6i4Jc+fBff+bEnN/VO/80PPi7vvP9RHk+GlW6P0lvIDJUGerNTUJaAoUqRJgau2DtHOH2CN994I9+1N3vRKLvfevl1+hVX7KXz9FPMkpjtTTFaGmK1YHbuIAQhVBUuh2BKom3ApUlBrSWIZyk5PhUa3r+yxD/4xMYWAq/hn+/K9Y1HDpMvL9DRiLWGZCzOeGJZE6uSXq9PHR0hn2G1N81945rfuvse/vYnN9dK/7YPPiG/8Yl7eMx1Oas5tS2wrsAYR22htg3RBMQExDRMS8PMYJHXHtjH39w/96yyaNYsnWezcJJA0I1L4a83zq39guyq0fNf623RfeXhQ+xKIwo7RlykTg1aJzrqsQEy8YBhIIalHXN8KMKX/NGH5F+d2tyg/hp+8KFKXv3OR+WTJdi5vYzHFZYaI4GUW8ZWaVxG3p1m/vg8u22HHWeX+eYveOlmL31d8L9fe4u+ZrpDb/EkhWtI1CiWpDmmKaD0gMcYQ4hjkisJvqSmpGkanJuiZIpHYs5vzZ/m731iYwuBL8Q3vvQ2spMn0DBEepYYEyYaHJ5Mcrp5l3LUsFh5yrkj3FkZXvP+e+Vtp7eGLH7/06Vc9UcflvvFURezDCOM6wbx0iYompLcAjahqWKmHnKgHvPVN137rJ9n4JkvvdFnurCb1Q+6HlBtHdc1rO1zrTd0PfH/3HRM51aWmJISMTVlqEjG0u/NMloY0icjVcpKMsR9+/nTU/O8+V2f2BJC9en4S3/8qLzn8RP0rrqKkdY0acygXgYH3W6X+ZOL7N95iHws7AmJfVXNT15zYBOsuvU7hH/rVVfpFxQ5O8sR3VARJEA3p0YxvkDUQZXa0984rLWIUaQjDCmJRZfT0fKEn+G3PvUwb79/tGnP9mdvO6Cz9YhZl+hM5SyPh3hjcdFQDRtM3mO4PKLxfeKhG/j9x87wVX/6qS0pi294313yqbqh6c6QjMfZfEKQIMQYSaIYb7BaM12vcjQ2/PCV+z9DFs3nyly1iuHybeo3G5hp+aJjR9glDZLGJNu0bKpiiePIdGcOM3L03BRniw5/Pljlmz++tVmbv+7Ok/Lu+VPIjlnKeshUP0dSjVQNO7Jp4tDhm4xOWbK7HvOlR49u+BrXK6zyW3cc1dfu3cXUYAUXIpJnrBplxSqjGDGZJVkl6nmaKBMc0hjG9QjT7/C0Co91Z3n5H35E3nGy3tRn+4Yjh/BhSJKa2idGWpObDBuEnAxihnR3sjg1x++dXuQ7Pr61E0p3vPdOOZUsYnpQGVx0OJtTJqhVwDkwDVk94IgG7jh2+DM+Y2LYGFSeqRUMfEZpxuUGL+bZ96Hms5TSvDD8xG1XaG88oJd7NDUkVVzmiarUMUKy4LoMouMp7/m6d29NS+7T8eZ3PywPVzVlpwO5R0Qolwf0pueoBhU2GbQe05eGQ6L831dvhlV3cfi9r7haXzE9hV86S1hZAoHkPQ2GOkTqVKNGiSa0pHJeqDWhyRE0I/k+p3A81u3wuj/87Fm/jcKv3nZYD8ZElgLjWDFqxnQ6HdAAVQN5l9E40Mzu5c6FEf/gfX+x6Wt+LnjJH/65zOddVhqDz/pUQRGXEySjmTCpGA1Mh4aruwXfe3TnM2TRqAhR1pyASSM4LVGe1YTXy052z0GbSZP6BS7OWoJlLRu7HnjNoX3ocAligzFZ25+qQkDJOl1GITBuImfyDne86yOXhWCt4Tc++jAnfZ/5WhGXkXkLKytM9Xtt7NMnrG3wq4u84vChzV7uc8bfmkPf9aZb9XY8M/NL2GZMNtul9kKZArlYCjV4BCXQaI1mEI22XHO+ILo+Y7eLTw0MX/b7d2+J5/qafUfoLIywYlBnSCnRLTyhGaM2ghGq3jQfWljlGz5w/5ZY83PFv7/rTqo9+3h6UGM6M0TJMMYTYktVjzOYWNIpV3n9lQee8bsmrr34Yp7hCghgVem6y5e9pOf9uWEdFyIa2gEy66DnfuxYV/drYM57ysEAfAcxGU3TNtyXTYmZ6XNmqsM7H33k4i+4wfjFZeSPHz/FsDPLWC150SHUA5KO0DwiBdRxhAkD9nrhbcc+Mz5y6fDCHuCPHuzot9xyLbfnGbODAX5c0XUZee6pQkVKiY532JjoOMGkhpgqEpE6RaJzUHSZb+CDpwd83Z89tCUUxs9ff1j3JkcxqimiJTcZDqGuxtRxhHQsQxqqnbP83gMPb/ZynzfefrqS33/oIVZ6fRqbkaJgJCOqJYrFZJ5Igw6XuXV2hn+48/ybb9qX/oL2aVlLSLSsESsLi5u3s4vEaGkJq4kLawXThDxwzaq7WLzyyiN0VxYokpKbAoJS1YrNPFEjicSSCdxta77nic3Lwl0Mvu+Bs/LJxZKBZKAJlyUGYYEqG1L5ioox1iV8KLlt/4HP/4GbiH9+sKdfe+uNvLI/RfH0CbrG47IeGiGOK3wIFESy1GBiiUsJl8BqWxwcVVFvGRD40PEn+at3bg0lB/DqvYdJgzG5eLLkyUYJh1KHElwkFpGlAt731CP80pnnzvyxlfDd956QJ7qO+VHVvm8JjDg0tczbY0mIicyOhrz+6PlYnZM0IQU04RzlMxM+M58SN+/bwz9+8Amtd+yisp6qKsmyDEOirmty12ZlW4bbjf0zGmgUvPfYZKhDg3iHr8f0l5a5dtccbnz23GbP9fRONJysQzT76FSHztMLhEZx/Rmq1QVKKZmam2VhZYV8aprjNXzVey+PWMhnw1d/8B755Fe+RmeWTlKEht5ch6Vqlcx5sDmZGCINR4qNGKaUPu3P54Z/etWsfvU1R9nXjAgLi0yJpQlpwtgRAMXlOcREUzXkPqeKJc57jDOoA60Sah1LZeTbHt1ayuKYz3CDEVgLmdCMGmzhUN9SAi+qcLLb4Rv+dPNYo9cDX/7/fVTu/0tfpOVgBd9UeBGaGBEPjYDNLM3KEtft2QU8DoDzaWL+S2ipntE2WA/4VHOwWuF7X3UDjfFEMedq0j7dHdwMRXdhv+raelRalzuPgXy8TB4TijvHWgI1grYzKC+yV/Lf3n5QO4NByyPXzaEaYiz08i6j1THJd5k3BR86ffqirrNV8DuPP8XfPjiLrVawyZOZaVKtFL5AYkMcLHJotsu/PtjTf7BuPGufXZk9H/aZn7qhp286soerzBgdr1CbRNXpkcYNVgAbEOMIktM0ER8NPjMYHyklkPIEtkIcpATO7wXuv/jtrRN++9YjWoxO0zEtE01TLxM7SkyWzPcIJJb9DO86Ob/ZS10XfPjkAi/fMcXBNCILY/CecRWxPgcMxiZ8CvzYVX394YdXxZ0vL3mm5lpTGP1mTH/Dt7HeMBfsrk1DrEdG+UjhyGNsG4ZTAyjG25bnLglBMk6L4XvuWd/RbZuFH7rnUfmmI6/UTpa1/GFVILMdQh3JjKUwCS1XuWbPHC1TxXph7UFdyLDz3B/eT90yp1935Ar2lwPMyhK5z7CdDqNyTM/mOFGCRuqmQm2O7xa4KjAYr2C75w9Dq+ncydqYrVVfOusSHakw6lETaVwgmESMBomeQRM464Qf/IvN7cBZL7z/kSe4/oteSqwEjS3rp3OTeSqhHaFkU82R2T6wehlTk2wB7J6ZabPT1hJjJKDgLCoGSZYkGY8sXr4xzmfDg2fOELpTVCFipaUHT03AIHjrCHXD4QMHN2Qtz0V4/8NtV+hX7djPVVVOf+iQ2AEKMrV0xOASECJOA04SQomYgC0Ua9fGE1o6tadbe/IoGE1UfvMnkF2I6V6BcbI2FAUjDjBYccQEqdvlodOnNneR64h/uzCUpwYDamfb9w5wVmiDre2zdDFw9f69wOXMwbTJ+L5dVvuZa5MdTmjTDooaQ1ADtqCxGR++DDOtnwvvvecRBnnGuEkUWQeDTCasKSTFpEg/zzd7mQD8x1cc1TcfO8qRJhJPnoUKinyGFA1p3FBIW1EQQo3RROENEmuq4TJNPcZlFtQg6vDRYaJrSUolkczmzwRew987ult7nXZyrNLOeVBjUSxeMkISYr/Pt3xyaw0ov1h85JEHqZ0jOUdSRUQxREwKFAZ8KJlmovg3ea2XLY7smCULAdGI2AnNt2mJCxuxRJuz1MAvnNwEnqhLiJ8eIcdDgizHqIGUyJzHaCKFmtwawnCVf3LdrktfZvI5Yqy/84XX6xv37CY7fZJuqsm6GXjbKmM8Tj2xiQQDknvEGKgjLgaylCA0NE3b4ZLEEMWD+onia6kptwqOzPbJLQRtwyfAZA6wRSNgC54cXb6D6D8bfuLxVVmMkZh5giZiDDgUJxFPIgs1nXrMv+p9Lkn5PwAX0+96aHYHtioBPT8j1QgxKFEspWQ8triybmvdSrhvYRFT9KjLqlUclvMDsa3QDAZcuXvvpq3vD77oFn1JljG7soprhjS2IWYNja1ptCal0NJz+4w6BiRzRBHKmLDFFEV/BrIMta6ttxQh4SbdQ2uVCVunkP7wdAdDQ9J2bCYkogJqScmgPueuJ49v9jIvCZ5aWaUynmDMZGqZ4ibFcnkM9DVyw16zbdG9UOyf7pGFgJG2B5IUcWIQVdRkrBjLp06+OLKtn457zpyhvsBQjTGgRKyTdigxht0bUWbyLFnX97/ien11t+BACDTLS2SzfZYz5UxaYWhHqK9QU1GLkoxFte10GKmhKnqMimkeWyl5fGGF5DOSyLn60nNKT8y6lCatF/Z2MlxqiFojblIug5IwWOOoVPjkyTObvcxLggdOzzMylmSzNlW11uAeE4VY/KhkX5FvK7oXih15TqZtPCSk1M5MFdPGrKxj2Rh+9MTGjrLbKPz845WslhWdvEBEiE0gqmKtAU308ozuBrB7uXT+It8zZ/RPvvh6valryZdOQ7nK7M5plsdDxFvyrse6hFJjbCJJw3A8IjeOGGDVeIbTu3jC5PzJY0/xgYcXWYxtgblhrYC+vZ5iULZOx9Cst8ikDrAtJ0ioCqqCMYaVccm/WXxxhVDW8ORCxUgc6jMSBqyZzD8WjBi6xrEz72wruhcKaRrcGt+dsW2JSaixUYkKZWdrBOQvFSTvEFKEpHjvQVoXPjQNEgPTzq/LdXTSay2TadU6GeQtInQmzDrff7Cr33TjddycWbr1KtYFQtewHEsy7/F1olNGug04lCgBlUiWGfJkqYNhNLWT+9Xx3x58nL95Jsm3j5E4swMV8CmSpYDRdo5sFEtkffa3HshjwNIqNUSJscFKSwSqKthOd7OXeMnwc6tIKRmNOLAZIQrGeUhKioqWDdNZsYWOpU3AxTCYeCJW2zaSlGIrZCli8ajAQv3iC/5eiLJuX3qZsCerKsa0ldwmKcUGhH/z1PCrRzLdf3Af1+SOHSEgMREJVChBFSmhI5YieYihdW+8gBWiCoMG/J4DPB1L/vtf3MUvnTg/4WqpSUwL5yw5aN1WxYBml3x/zxVe24x3i4QYmXC2tZ1Aq9V4M5d3yTGMiR2prayJRrEISQQxgqedVfx/tKK7GFgBkwDaGjqsIcWAsYJqYmEw2OwlXlIMqzHqWkWXtC3lFSOtf5QimVx6T6kINXdctR/vHP2mITUR1BCNw5DIJJIZwQeFyoHpYJzBpEipNSMiMreHT8wv8LtPPPoMJQcQjG1jcyYiJMQY0qRl0q4nz9dF4Pt7qEWQBLrWLWTAiCApEo1lefTiTIqtocagks4dukkVFYuKTLLk24ruBWPNlbJJSEmQTIhoO4QDGA9Hm7m8S45xVRG9xRmDBiVOLDoxrbBthL3jNbIrQRjVpMYS1OOkpTrPUoWx4K1AUNrUsIdgaWykKhzjbsH9K0O+9IPPzq7rnCM1EE1CxWKkNZxEwW0R+jIjrSyKmjYuJyAINq21SQYG1YtbFpOxbQxVFKOJSEQwWEwbq9tWdC8ca86M0TYDl4DGgJ2k933YGi/CpUSQiKN15VRaFhwVwAh2A2LfRiGLkTpGGuNQYxH12NDWuIlRKiqyrAPGUpaBKI6mO8O8bXi4DLzpzz87hbhRRSW1tXbJYIxBIwgBl7ZGHV0yEMUBrh2OLmBIrQWKkkwicPmyhD83JIwqVgMiCaGVwyRgzWTw9WYvcTOhz6Mp/NORJoWZJgpOLYFEdNCYCBrZ4V/cyQiX2bYXZGJRqNhJSYOiZmPcOqNgkuCtxZu2QyPqpBVPLYKD1B5ClWkYZsp45zSLM9O8//Qib3rPJz/nQiVOMpkYjBqMTlxzUZCt0QL29hUkIqAWs0ZBpjqx6BJRI767deKJlwI6afsyKbZKfk0mL1Bv2xbdC0SQNUWnWGOoUiK5ln4bC3s6lz8VwudCURRELc9lQDEyiY2A2JbZ9lIjYSgjGGNxCpGaiKBOiCbHEsjU0DQ1tQlUU56nZMiHnzjB937iic+rjUUbXIIsggsWK46QGmoCwW2dFrCkgohFxAIB1YhgMQYikV6/t9lLvKTwApaAaMBODl/VhEpCkwFV3BojxFoBpE5eYFEIRhi5gtJaauNJYvh02pzNDsl+poNoMJrIY0MnNhSxxq0N+FEDtHxNepGV7W0iri3MxLSOgp0EgK1GOt0X9xnS8Q6tDJoEIxYjStJEkHZERlh3ybhwpPqarAoRhxiH0YikiIqi1hIF6hgRm7EaInW3y3y3y5888hQ/+MnF57S4lEJL2posLcvP+Vkjso4TyC4WjQAyiUUpaBSSm5DLqtIpXtwWXdcafGy73tRIm5BJBk0JtYpoxCEJSQYfW7aDxtYgEaswNh2eyKZ46R9+XL5zZ1dLn/EbJ5cE4Jv2TamhpXKymxSOimL49clM1G/e01dVxWQZWTnmP54dyz1f/lLdXy6SNc2EZdiQNGtdLFMhFxG76OZd7OoqMbOU9ZAsy3Aa0WZM6cfEF7lFZ6PitcDZDiGMcE2EPFFmjjGR8bqUl3xuZaKA5p5x3Q5odt6ioxWSEfKpDgtNxQJCPbuTp43nD+57nB9+4LkpOQBrcmgGxCDYosNKWSGZpUmGXtw6ysN1C0Yr8+zyGbISwDiitVQErPFM+Rf3odtrSgw1ozAmL7o0TSAXh7UCVplfmMe1admEqDtnHbVRiURjDA8sLAHwq2dHAuezN//15NZiV/3PzzJ495HlVXZ1JmSh5168lm31Yjt4BmVDFNdadNZgg8GKAAankBMu7gJbHD3vMaPy3G1ds+hUIo0oS82lj2EJkOqGIsvQ1LC8eJaZfhe6HVaWVzCdPnV/juPq+Z1P3MvPPPn8hzNnNgMizYTR2lhLigmttkaMDmAQAj1j0IkFCrQDfKzFYzD1izcZ8SN9q10UMYC3bTmhOoxYIpFGlUEIbSlYmmTM0uRrbXhMEpDL+DSwWT7pTzSszcZQae2EtWlgLxSnVldpbKvoMvHYBggCLsOIMNcIP3fNBjB4bAL+xQ27tSOCjYkUG0TaBETU1DKaIJwZX/qSBpsgG9cUzjGuVnGzBakrLC0v0Cmmybq7eWgA//Xj970gJQdrvZPaKhFRPC0Bp4mRH+2vy9iRi8b8aHyOEzFlCXWJmBoyDHkSfBn4x9cVW2Kt640j+/aSYdBksCbDRsFGbUctJNCsHZFo1tKwKok4UXJKqxQaI9i82Oy9vHB4e07BnVfgayn5i5vz/tTSKrUviGKw1pIm04XUWIwK01Xgpl171msnWwo37NuLaWq8SRhaxoiIEpLijAObc2K8esnXIShFN2dw6gTTM9NYa1laHdOZ28tJcj4xCrzuvXfKL55ceUFKTkiTOF1ENWINGIlYkyi8cOyKfeu9pReE46sDrPWklAgZ1FkkpYRXwUahCHDbnq09tOiF4vDuOXxb6ICVdkh3FiczZdSyGoRHF0aYJIqyVlGdSFxo0RnGzeXrgo2bplXewqR1R87V15wblPMC8ejCMqMsa2usrCHQBsYDBhOFfFxzuLcRg2I2HkeLHBdqIGEkThRCQpPF2YJgLI+Pli/5OqJJlHGVqbke9cIiRWOZyXaxUGfcZR1f+KcXP5Copf4R7GTOscTYzjs2hmP7No+K6kI8trAIExLR2idqq6gmTBRsEPrJcl1vxyav8tJgT6/ANYEYpLXqouCTxYaWZGPkOjy6cm5i9dqwwxZrbl0SULulQnHPC+LdMwZWP1PBpYtyXX/49FiWEYIxBInUFhrbmssGwTQlsybxloOdF5XL8ONHOjpTjskMpIk1Z1SxySDiiHhWQuQXHj57yQVHgZgZxqEm6+2gpsuSn+YjyyVf9Z571uX6qoozLYOypIjGBpMCqR6zp8j5iZuv3vTn+xP3n5FROh+CiqZth5KkkBIdhX0q/JOZreFqrxf+5S0HdJqITQGjoMm25AZioImIyRj5Lm8JbffeZ3AIXvizytYaAvL8MCknwbT/1baI8vyc14vLDC6o0BhoaAhOCR6SBpyFKA2iJa8+csXFb2ML4TWHr2RHHSDWRAeJABrxYrHqGSfL6dHGdA2oQKOKmZpipTY8bTq88+wyX/Pxh9dHyQkg7UwQA6AJowEvoE3JVCy54/BefujQjk1XICshtd0h2sanrLXEyUQ/G5SpsuI1Vx/a7GWuK161ZxfdZoQjYkRIqe1HxgAxotbx2KANoZi1l95MevjWXv01Zefk8m2eWKtZXduLTL6MTr6/SPFcTJDWGoklIRZEFWNAbUBixY275y7uIlsMx6Z6zDhDqMdgIWnrwlocKhmrajmzYVk+g3E9FkLG6ekZ/ujMWf76XY+sqyWp2r4cqoqQ8NaQe4PESNaMOVCv8tU3XskPHfCbquxWVCjFIaklmxBrzsXcJQbyquLWLT5c/Pni+l5B1oyxRrEmIdqSa2AsMUGwjhN1mx03a0rOapvFkgsUnlHaUWKXKbyxfLoiX/vZposv+vyTO++iTkphPbEa40m4GEl1RT5VEOIYu3yW937FKzf9xF8PvOuLb1Bfj2jCkDxzxLo6x/KbGkjkVN0+H33s8Uu+lpYZ2KHMcUZm+E+PPcHfum99x0omQKwnNi2xqrUWjYlYN+Q+IwsV/fES16SKv3HDjfzmjfs37Tl/4P4HGdmMwvexE4NarVLFgMs91BXZeMCvf+GhF4UsfvCO27W7tEROjTUNxAAkwiQxpt5TWcd3f6gNYZhPt+Y+XSlcvhG680pNLvj+nPtKq+wuBr8wP5baFQzLip0zs4yXlvCZx4gyHo/IrDLjIF9Z5McPb95LsB74xSt36xGxFEQS7cyFIs/JsoyoCWxBKRmngvKvTzcbIjaN8Zyky+994jH+xQPz637NuMYoPPnkC2eMGBJelRlJ9IZL7CnHvPbAPj78Za/UX3npxsftfvDUUIa9PiujgDM5UZWA4jo5IUWKIiOrS67u9njL0cu71OSnbjmgc6GiE8ZYjYTQYCRhM8+wqdFOl1UxnLqgltOsKTU4r9jWFMP5WNbliWdzVZ+pvC/eLX98fhX1PWwyZI2CdZAUh1AYQ+6UnR5ee/TyjtXdcfUxdmoCbQiipKYtTk1Ao1AaR11McfcGziYYuJzf+MR9/PPTZy6JYk0YdFJ90Nr/azHfFqJQjcek0GBtoJcqDseSO6Z7fPQ1t+h7vvBWfcfujVMqj5UNpWRAhnGOSCRKog6t5e1SYB9wxzVXbdSSLgneeMVRpmPEmpYpSJyQtEZESdax2ERGUzPcdeL8HNtnfdPXlNvlG507jzUl/ow9qVk3Bf6+Bx6l7M2yMqjoTE1B0xCbho7LsVGRUDGbwwFJ/PYrbr8sj43ffNlVuivUdGLTUsgbSwqREAJ1XROMYeQcyz7jH9z50IY5AaUzvO3spcvuWmvb4nLWrLq1S7UJLgCfd9oatlARy1XycpV9seQWq7yq4/jrN17LQ6+7Vd/32pv0N7/wWv3p2w/rdx2ZviRy8J4HH6HuTFObjKja1tWFgBqljBUd78hGAw57wy++5PBlKYu/9/IbdH9d4+pyUsxtcFlGjJE6NGTdPot1Yrk7xd944HwowyUxrLHqrJnoSUAmBbXpImrNNh/pGXVza8SJa/9vPVT5TwyQ1w1rvTXvME2NjkfoWnWyRtAaSZGdxnLrjjl+6KqD+raH1zeWdCnxk4dyfcPhA3D8KZy3SALrPNEJSSOKUFshzs5w3/zChq4tmEt7FIttRxyqmHMthC31z9qQHAExbc2aCN4ZjBM01pTlKnVd0+31yaxl1nqu8R2+qNhBmj3EPzuSazKWgVY0qaSuBoyrEcNyxEqKLGA463MeWCr59RPPzS3/uScW5U1HG93V6ZJWBuTWoEkxzkFKKIGeS4TxgDsOH+KfPnVKf+J0ddnI4i9cs1NfOjPFznrEkECNwYpDQ9vBkoDQCNnMbj66tPSM33XnioXFnD+9Nn4Plxzn+nil/WE99/iHjz3K9bffwsqZk0z7DOc94zpgC4/REY6EbQbMJsdfueFGlhcW9V8tjra8gP2jI1a/5qbrkTNP03EJB0hoa7OMtzQpkdmMkGDoHX/20AMbur5oLu0hHLVlHWyvYjCSQFuXdsIwStnUOGcxxhBDpBqXiEDRyZiemWJ5eQETHR3jW/LOxmGjx6UMrEV9INGABLQQQrfHKMtYyDvMd6Zxx0/CifnnvOY7nzjOzbdei0nQ7RQ0tRJSxDjDeDxkemaKOKrIFub5+ptuYbW+R//10njLy+JPXTmrX3b4MHPVEIbLTM10GFdjvHWMRhW+l4FmrK5U+CuP8i1/8IFn7Ml8es/nhUW1atJFdQ9sNlRSS9sjF1h2E6qdtSLi9cDPP7YinxousZwZgrHgcpJYxBhcgq43SL3CTBpz5WDMX7nqBv7uzOaWI3w+/MDenn7T9bex3xnCeJHCQaprXAKTlBjj+SJs57j35FP8wqkNtg7k0paxVGXDhbWYreyctyKTgOvmqFVS05BF6LsOPd9FG1hZHeC6XaTjUB/ambL5iNRZRXvLaGeRxi0S/QriVhE7xJkRRoeIlqiWZNnz6zV/y2Pz8vjyCs5lECMmxXZqjLb0RVU9okdkZnmVG33B17/s1fydubktLYsAf/m6mziWEnkcEcII4ywJQaKBMOlfV8W5ggce+cxh3SZJa45fqM4u5wTEhfj0zoe1ny/F7OH3P/gYZafHUhMIqSEZIUYlNUAteJvhRfHL89zcL/jO13/h+i9infCWg7v1G26+if3jEaNTT7F3bgaTIqGpwBmMs4SUiL7grHRZ6Mzx0SdPff4PXhecj5NdbB3k58NqVOKkYN5QY2lQSRNjoFV4oa4RhcJ6vHHYCLaOGDV460kRmqgEpS17MAom0qQR42aVJDWJejLcRRFJOEl0U00x6cB4vrjzxDzjrMeobNmWrROSKFNTUwyWB+QmozM9jS7Mc9Q1/OXbr+V7d23NDp63HNqln/iaO3TH4hny4SLNeJXu3Ayrw+GkvzeS5Q4NwigY7M59fMnH7/yMN9zoMwpIzLoV024JXMCJJqS2mHfSCSLKs056f6H48ceG8uhSRZybZmQSYhQrFpUpyrqD2OmW3tuNkdFTXDE4zp1fe7t+79HulrrTb9+zW7/rhqu5uYh0x4vsKArGgzEShbxbUDZDSkrywrOaDCdnj/CeM4Efe/xSDOs2E9bcdhgzTAbBTAYTSbq0MboHzixTYpGkuGZI7mvKeoAtMrzLkWDI1LTzQUKEJkKMiAo+go2CiQabPKQcUgeJBSYUZKlHR3oTwlsLoYPGDkEzJAm9JtBvGrIXUOD1dx88KU+lPoNiBrodBs0qZbNKSomZ7i5Gw0hd1eQ9pb/6AK/sr/LNX3CUH9i1td76n7y6r991yxEOnHyInWERTIkrLOOmxvscbyxRR/jcQsyI+RzveuzJZ/0ss+aqnmt75cVj0X12XBp3/Mv//F5ZyaZYSga1DmJCrGsHswSlqirURqZyZWeq2LOyyLd+wY284+Vbo4jzv77kVv2Wl9zE3uEy5ckT9LueFBuCNNQu0VglOIsYh4uGJloeHQa+9yN3b5DLap755yWeHXv/mQVS3mdUBtz0NM1wQNbLqWJgMFzBWjnHiqOSaM251mJLk35qq+BS+7XWdpiYUIdNvCl0MidWM5TWgsyS4lPA6guT1d+86y5OFlOcqWryTp9eXhDHY2KM+E6BektZjpglIadPcKUEvv0LX86v3H7llpDF//CKQ/p1Vx9lx+IZdlAhuQPrUHGoCrGONHVJ0emwMhoRp2Z4Mib+2qfue1ZZfDFUkGwp/P4nHqXp7KKxnkCDtWOyrMb4QHSxrbMTh4nCVNlwdGmBbziwl/d86c36A/uyTRGyHz7W0w/fcZu+YZfHD8+ABHyvTyWW4BOxJ5y1JYtWyfq70aZDWC7Z0elz94P3b8aSNwS/dHJVlgOYYhZqQwwWn/cIEtu4r0tULjF2iUGWWM0Sq3limCUaF1GJGBqy1JCnBqcNyVRUvmKYV4yyhuZiq9Y/C35+aSjvOf00sb+HamzwtafwBUkqGhmTZS0Rg7G7mbJ7KFZrdiyd4c0H+7z/y2/QHzq0OTHkn72ip3ff8RL92pnd7F+tcMZTFX1K6TBqDJoyCsnJrcF7TwiOVQpO9DJ+54FPftbP3VZ064zvfeSUfGLQMM77BOuomoqkY8QFTCaoUZomEurElHh2p0R2/HGO1RV/61Uv57+/7tYNFbBfe/0h/Zpr9nC1GTK1egZXrZDZln4pVDUGQWOc1JQJo3FFzDusFDPcdXaJH3v0xJbP2F0M/uLJEzC3h/mlEpdPE+uW/miqV9DEimQSzYS5JlhIJpGk/ULShEQiIQSEgCG0GVYJk0TfpXvc/9edj8q9g5pRZ5ZaMlJZ451FNFCVq+SFZ2FhFSM5071pdsRAZ/4ER8plvv7qA/zuazfOuvvunei77rhJv+n6qzi0usjs0iLTITLlMlDHsEmUyZJchhGHCQFJykq0xD37efcTT/AzT3/2ZNjlSx+8hfF1H7hL/vh1t+ttnRlIY1yqCE2JmAzrpwhNxAaLybuMVxfZNT1LUsPC8eO8utPjsTe/Uu+aP8n7Hnmcnzuz/l14P7prh37Blce4Zl+XHfkZWDkNKxYvBZ3MobGEqiIzECuH1obZ6R5VUhYGA7KDO7nLOd74xx9/USs5gO+873G5/cAVeqC3GzE1cbSMk4jvJMahBJcDpvVY0wU945PwyKeXwIgq+QXJ4nCJTY03/enH5M++7DU6XTia4/PszAq8UZYHA9x0zvTuHqujATos6WaWXfk0UQNzajhcFDzx1S/Tjz5xgvc9fIJ3rK6/LL51v9M7briaI52CbHWZPkqvSKSywdocMx5jgdw6pOsJBupqRF43qBas9Pp8qkx8z8c+94G7reguEX7nUw/Sf8n1XDOzD1st0QwX0ViR513EWeoGNCR8npHqCoNllzPEesx4qeTlvZzrXnkTX5NbvefsAh9//Cn+3aMvXNC+72hfb9u9j6t7M+wVz3RM5ItLVPUJ+h1P0Z2iqSJ1XeGsYi2QEi4J07ZLXAlQdOke3MfHhiPe+J6NisttPv7owUf5jpe9jHLhJD4GbByS6prcGyoMohYT27iaS5Me6kn5UmOfWcoknFeIreV36Y2m/3L3XXz7Tddxw6FjlAsncammNztFFUo0KXmRYYsuqakJdY0zQlcbpBzjxkNeOVtw4ytv5Otwev/SkLuOn+SXnn7hyae/f8UOvfHYVVy3a5pjpiGcfIIdTc1cN6ceDQihwheepimxYkhJyRwkI4yqEqPQ7fcZ5z3uHyfe/L7Pf+BuK7pLhF86M5Ts4eP69ft3c2MxTZEHtFpFUo01GRhLlQJqAtYpEluWVBFDYTIkgF0c088yDtgZvvjYHH/niOhKGVleGbO4tMpCOeZ4PeYdg/CMB/1jc5nunZ5hZ7fgirk5+iJMO8OUFfIUkTBCQo2EwExxgPFwlQUd4TsFxVSHECN10zatu5TAeqRuWPWeexvhP9//8Gbd1k3BDzx5Qq47NK+3Fx32SYWVBo0NNptMgVeDT5CFSWmfJsAiBjyWxqwlLNay/ZN5TShw6bn7funkinTdQ/qtt97AHunQ1UCn6BDGQ3IR6mqMiCHPc2JKDMsxSKLT6VCXJdNOmbGevdZw5c4eX9Q/yrdfIzrG8+TCKmdHNfPLZ/mxs89Uft+9A53p5cx1uuzt99nd67LTZ3StpdBIZ3EeN15hZ+7REGmWRuRZRuUMS2GEKQzWKXE8ZspEbG0wVcRPzbKcF3x8ZcB/e/TEc7oH24ruEuLtD52UzqhRrjrAdVM7sE2DRLASMc5hvcEYS9OUpNQWO4LQNA2OxE6XEUYRsYBJRDEEr4SdBWlPh9JaVrznO4xVr+2g5TwmfExkIZKlSJYSJjVo1aA07ZtoFGMTxufE1YZOdycuDwzrAYPRiI7P8Fm3HQdZt9X+fv+VPFU1vP4PP/B/jCV3Ib72z/9c3vdlX6peHDtNhskiVRi37MOTzGrbDnuBqyrnBzHBZBiLmnMzWZBAwmxIoPxnnloUHz+l33zL9XjpcXb1aaZyRyrHFN6DWMahAhVcUWAFQmjIrYFQo1WJSzBjM2Z9jhrDWGuu3NOlNtNgdvOtgkYzaTgg0vIUgosRnxJ5SnS0wjcJFxViwImi4xKLRcRQlw3JJfIiJ9iGZCOBBsgQ60g+YzQ1zSdXVrjjA8+9r3pb0V1i/PiJszLuev3Lh3ZzVb6LTBq0rlBtWl68mDBJaABNCWxbkEsSUgo4BBNrJCaiJKxth7MEIpIsedlBcdhJbWA72wBEE0YSIQXEgHhaokwiQQPJgE+GwnUgWUIoUY30rCNTgVqIKWPZCs2uXdw1GvGb93xqs2/npuLXPvpBvv7Kw9wy26cwgomJmQYkTYgcjRAtBE0k0z5LnUy8Vo1tLWBSkghiPNaZlshvg/DjTy9JSp/Sr335zRw8cISFE4+yKzPUsXVXnbM0dSLWbcuYU4sgSEqoNXhviCbR6IiQFKNCT0q6E92+VqZ2zhmXNIlXgk2K0/Znq+dZzUOyIIakLeNPljlwEFJF2QSyzNGkov133WmGvR53L4/47fsffF5731Z0G4C3P3RSGFf6DbfdyK7xEr0UmZ3KGKyu0NF2sLbxFiZtLTE1oGCMPV+5rYqRQJSIkYClLUxFEya1j1H0vHWwFgx33pI0EGKc8Ktp60aFSNSIcYHx8CzSN8x0ulSDZQZlIitmaLrTjPtzvPvxJ/mWv7j//0hL7kL8+4WBuPiAcvuNXL1zljwmpgi4qiFpoiGSnCE5nbQkBYy0RP7eOESlLZlLkGJFiLE9gDYQP3lqRRb+7MP65Tcd5ouOXUvz5OP0c0NZJ5qmppt3IAlNOUaNYESRpIhRosQJ4YfBWzex9qpnWKRyYZH+5Pu2fvC8clv7FwmD8Q4Ri02JFBqqUUkyAZc5ulmHatSgpk+V9VnNZ/jIwgpf/4F7n7csbiu6DcLbjy/K24//Gf/rtS/TW6anObl0nL2zs1Sjmo7LiKmiHK0CiV63HTFZliNc5ieFsW2fZduzK6Dt4J9o2ult53j3zll2E4ZoVYgWFwUXW5YHSWu9cA1Nc4bObI84DoxHDb0dszCdcWoUmUd41wOP8X33bhz10lbHrywH+ZX33s3P3rRbX3/4Cky1xJwHMQ7FYERxAjE11GWJcQ4jgpHUlkWIAWNat1YMNYGNrvL6t4tB/u37H+G3QqOvn55hOH+GTneK/nSXwXCFGCOdbtEeuCkizrU1d6qkICQxmJghFpJKe6hOqM9Epe0OnhRHr0HXesyB5oL++uHygLnpPniPhCG4hk6nAOsYjxUnu6C3m6ddzjvve4j/6+EXRpW/reg2GH/pTz8qP3twVr/ytqtYqMf07RRLyyugNdMz02TeUJUjQqwpuh1Ck9q+yklspxWotkYrkeBZZnqsdbaIGkITcWKxxp0bLo1aUEVTwhaeplzB+z7WO54cjWhmOxwvMt73+FP8swdPbSu5Z8Fb7zkj//D0Wf36229kKIlCBFtV5DHQw5LZDFdk55ReSNDE5oJnA0EUk21eKetf/eCT8muHpvSLjx2l9o7B/Gmmcku/KIixxmMICUQsikdUzs2QkaiEENo+WnOe3NagE08D2gilOdeerEA05hwZBMDc3n2MVhbQ0ZjeVE6RF4yqinGtxGKG0u3gsVHD/7rnXn526fQLlsVtRbcJeOvxJXnr8Y/xP67dr6/ZvY+d3TlUAuPxkNGwxGUe5wrqGqwanJ43/5E2vqYSUVmjg19zESZCeI41WjAqWOcxtCQDhNalFRGCWupgcZ0Z6joy7HRY2LGbP37iBP/oI09uK7jPg184k+QX3vVJ/s5u9PXXX8c1szvZMQrUoxFTSeka37qq0hBNQK0SjUxGRLbvf9Qau4lNV9/25EB48pP8jy++RW85dg3j+afQ0SpzPiONa7zpomQELKrgLTiTwFTYWJGkZTiKkyjL2mH8zEmCa3OVWzq4eE6yhMWVEd1OB9PLGVQl9UpFzKYY9KaY70zz3qdO89aPXXzYZFvRbSK+9oGn5VeWSn3pof0c3DNHqkBqZTrPsApNOcRZj1kTHKEdX5f0gjGU50khWyvvQgtBUSNtvRaGQEBFcE5a/jSTU9oOQ2tJMwX3Lq/w5t/+0LaCe574d2eQf3embYX7peuv0Nv2HWB/UdCJFdVomcxkWOsxVjEpIjFAUqxGrDFshYGiX/v+T8gPHJzSr33pLRzasYf5M2eZ7hkMFpPakYlNqGhSwjhFiG3MzpxnW1aBCG35zORgvpApqNV9aWLgtb/TySxRYDlGxr7A79zJMOvyoceO89c/dte6yeK2ottkfPfpReH0It9zeEq/5Npj3DA7Tbl0mpmmZle/RyiHoIaIQ0Ump6XHJj9xYds0fhLaxIRw7sRUgSCJNZKP4FMbS7KJEGqWGqGePsRHzyzx1/7oY9sKbh3w9+97SrjvKQD+8ZVT+tKrr2TWwJwx9FC6TVv2U1jwRFIacalIJp4vfvr4QH76+Af4x4f26h3XHuOANEyXK8y5QMcnXD2m0cDAGqJtmX0LzbHpAtblSXlNK4PnzboL50e7SZmNIeGMYaWqGff7nO31+eDJs3zPBz687rLonuztwiaLy9sAeLQTbiyFxbzHooT1vuaGYTHvcdx7Bi6ftOhYJGUkIslWnOxMb/YSz+GXnxjILz9xNwD/+dadevPePazElnnCKEiyWDXYZHDRkCUwBAwVTJ5RNLYN9prWVWiMoRElOUcwhspAso46KWdXVjixOuJbP/BnW1bBnSmmyNWwmBVE4oRUrE1TagqcKrbO83s2/MyjA+HRT5z7+fum0b29gv39GfbO7mC212FqqofRhA+TGkrbnHv/lrMei/nSxq/7yVPyMxN+wf9y+xV6ZMqxt+fIsi4xNiRjScZjDKRgydZ+caLJ1pTdWvJh7fsW58tPolhqsTzdBD786Am+98GlSyaLW1bIt9Hi5246pnunelzRn2FXVtBtAq5s8LEhJ1K4iMYxQROKQb0lGMNYhKEYtNdj1QpnQsMTKys8cOo0v3jfwvZz38bzxk/euE+P7dnN3NQUXefppga/vMSUMWTeYwWIiZiadu7uJB5XqRKtI2UZwXqWxiNOzZ/lscGYf/LgxsjitsBfhvjpfXO6d6bPTKfAaN2yY1iDMYYmKatlycK4ZKmq+ZGnB9vPeBuXDD9/7W7tWWm7aazDamuviQhqDck45ldXeersWX76dL0ti9vYxja2sY1tbGMb29jGNraxjW1sYxvb2MY2trGNbWxjG9vYxja2cVni/weXLXi6FWAslAAAAABJRU5ErkJggg==" alt="HOKO">
+  <div class="daily-ops">Daily Operations</div>
 </div>
-<div class="page">
 
+<div class="station-wrap">
+  <div class="station-name">DRINK STATION</div>
+  <div class="station-line"></div>
+</div>
+
+<div class="toggle-wrap">
+  <button class="toggle-btn active" id="btn-wd" onclick="setMode('wd')">Weekday</button>
+  <button class="toggle-btn" id="btn-we" onclick="setMode('we')">Weekend</button>
+</div>
+<div class="time-ref">Times for reference only</div>
+
+<!-- OPENING -->
 <div class="section">
-  <div class="sec-header">
-    <div class="sec-dot" style="background:#378ADD"></div>
-    <span class="sec-title">開市準備 Opening</span>
-    <span class="sec-time"><span class="tag tag-wd">平日 1000</span><span class="tag tag-we">週末 0800</span></span>
-  </div>
+  <div class="section-label">Opening</div>
+  <div class="timeline">
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1000</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0800</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">開啟所有開關</div>
-      <div class="detail-list">
-        <div class="detail-item">保溫爐（一個手動開、一個定時自動）</div>
-        <div class="detail-item">飯鍋、茶機、茶杯保溫機、熱水機</div>
-        <div class="detail-item">配料雪櫃（先擦乾內部水份）、iPad、打印機</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t1">1000</div>
+      <div class="card">
+        <div class="card-title">開啟所有開關</div>
+        <div class="card-body center">
+          <span class="cb"></span>保溫爐 <span class="cb"></span>飯鍋<br>
+          <span class="cb"></span>茶機 <span class="cb"></span>茶杯保溫機 <span class="cb"></span>熱水機<br>
+          <span class="cb"></span>配料雪櫃（先擦乾內部水份）<span class="cb"></span>iPad <span class="cb"></span>打印機
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1010</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0810</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">煮茶：茶葉 300g → P2 → Start</div>
-      <div class="detail-list">
-        <div class="detail-item">確認水位在 6L（不可過高過低）；輕搖茶器使茶葉平鋪再放入茶機</div>
-        <div class="detail-item">煮茶約 30 分鐘。週末忙碌時可先用 B mode 預熱水，節省時間</div>
-        <div class="detail-item warn-note">平日 2 壺通常足夠；若 4pm 前茶量低於 2.5L，詢問 DS 是否需再煮</div>
-        <div class="detail-item warn-note">週末需持續煮茶至少至 3pm，煮茶優先於接單</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t2">1010</div>
+      <div class="card">
+        <div class="card-title">煮茶：茶葉 300g → P2 → Start</div>
+        <div class="card-body">
+          <div class="card-item">確認水位在 6L（不可過高過低）；輕搖茶器使茶葉平鋪再放入茶機。煮茶約 30 分鐘。</div>
+          <div class="card-item warn wd-note">⚠ 平日 2 壺茶通常足夠；若 4pm 前茶量低於 2.5L，詢問 DS 是否需再煮</div>
+          <div class="card-item warn we-note" style="display:none">⚠ 週末需持續煮茶至少至 3pm，煮茶優先於接單</div>
+          <div class="card-item warn">⚠ 可先用 B mode 預熱水，節省時間</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1015</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0815</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">慢煮雞翅：每 10 分鐘翻動一次，共 30 分鐘</div>
-      <div class="detail-list">
-        <div class="detail-item">從風房取出，在 prep kitchen 水槽倒水後搬上 Show Kitchen</div>
-        <div class="detail-item warn-note">必須使用已預煮過的雞翅，不可使用生雞翅</div>
-        <div class="detail-item">完成後撈起瀝乾，放 2L 盒、貼標籤、送回風房（FIFO）</div>
-        <div class="detail-item">一盆預煮雞翅約 3–4 個 2L 雪糕盒</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t3">1015</div>
+      <div class="card">
+        <div class="card-title">慢煮雞翅：每 10 分鐘翻動，共 30 分鐘</div>
+        <div class="card-body">
+          <div class="card-item">從風房取出，在 prep kitchen 水槽倒水後搬上 Show Kitchen</div>
+          <div class="card-item warn">⚠ 必須使用已預煮過的雞翅，不可使用生雞翅</div>
+          <div class="card-item">完成後撈起瀝乾，放 2L 盒、貼標籤、送回風房（FIFO）</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1020</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0820</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">打蛋：依照 Preplist 核對需打幾盤<span class="task-sub">完成後清潔桌面並換新手套</span></div>
-      <div class="detail-list">
-        <div class="detail-item">½ 最多放 4 底；1 瓶滑蛋可放 2.5 底</div>
-        <div class="detail-item">滑蛋按比例加入淡奶、鹽、MSG → blender 攪拌 → 過篩 → 倒入容器 → 標籤 → 風房</div>
-        <div class="detail-item warn-note">鹽和 MSG 需先用小容器量，份量太少直接倒入 ½ 會不準確</div>
-        <div class="detail-item warn-note">盡量先完成打蛋再開設飲品站，防止交叉污染</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t4">1020</div>
+      <div class="card">
+        <div class="card-title">打蛋：依照 Preplist 核對需打幾盤 <span style="font-weight:500;color:#555;">— 完成後清潔桌面並換新手套</span></div>
+        <div class="card-body">
+          <div class="card-item">½ 最多放 4 底；1 瓶滑蛋可放 2.5 底</div>
+          <div class="card-item">滑蛋加入淡奶、鹽、MSG → blender → 過篩 → 容器 → 標籤 → 風房</div>
+          <div class="card-item warn">⚠ 鹽和 MSG 需先用小容器量，份量太少直接倒入 ½ 會不準確</div>
+          <div class="card-item warn">⚠ 盡量先完成打蛋再開設飲品站，防止交叉污染</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row warn">
-    <div class="time-col">
-      <span class="time-wd">1050</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0845</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">過濾茶 & 準備檸檬茶底　⚠ 開店前必須就緒</div>
-      <div class="detail-list">
-        <div class="detail-item">茶機完成後顯示 99°C / 4.5L；用網篩過濾兩個茶機去除茶渣</div>
-        <div class="detail-item">沖洗其中一個茶壺，倒回過濾茶，設定保溫模式（B mode → start）</div>
-        <div class="detail-item">用過濾茶製作檸檬茶底：無糖、少糖、正常</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t5">1050</div>
+      <div class="card">
+        <div class="card-title">過濾茶 & 準備檸檬茶底 — 開店前必須就緒</div>
+        <div class="card-body">
+          <div class="card-item">茶機完成：99°C / 4.5L；用網篩過濾兩個茶機去除茶渣</div>
+          <div class="card-item">沖洗其中一個茶壺，倒回過濾茶，設定保溫模式（B mode → start）</div>
+          <div class="card-item">製作檸檬茶底：無糖、少糖、正常</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row warn">
-    <div class="time-col">
-      <span class="time-wd">1100</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0840</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">設置飲品站　⚠ 開店前必須就緒</div>
-      <div class="detail-list">
-        <div class="detail-item">配料順序：紅豆 → 菠蘿 → 荔枝 → 檸檬 → 青檸（⅑）、薄荷葉（⅙）</div>
-        <div class="detail-item">已開罐的可樂與 7UP 放在 ⅙ 保冰</div>
-        <div class="detail-item">擺好糖漿、煉奶、蜂蜜、鹹檸七糖漿</div>
-        <div class="detail-item">器具歸位：網篩放入配料、蓋好蓋子；muddler 和雪糕匙分開放入裝水的杯</div>
-      </div>
-      <div class="fridge-wrap">
-        <div class="fridge-lbl">配料冰箱配置（俯視）· 由左至右順序</div>
-        <div class="pans">
-          <div class="pan" style="border-color:#F09595">
-            <div class="pan-fill" style="background:#FEF0EF"><div class="pan-name" style="color:#791F1F">紅豆</div><div class="pan-en" style="color:#A32D2D">Red bean</div></div>
-            <div class="pan-lbl">¼ GN Pan</div>
-          </div>
-          <div class="pan" style="border-color:#FAC775">
-            <div class="pan-fill" style="background:#FEF5E6"><div class="pan-name" style="color:#633806">菠蘿</div><div class="pan-en" style="color:#854F0B">Pineapple</div></div>
-            <div class="pan-lbl">¼ GN Pan</div>
-          </div>
-          <div class="pan" style="border-color:#ED93B1">
-            <div class="pan-fill" style="background:#FBF0F5"><div class="pan-name" style="color:#72243E">荔枝</div><div class="pan-en" style="color:#993556">Lychee</div></div>
-            <div class="pan-lbl">¼ GN Pan</div>
-          </div>
-          <div class="pan" style="border-color:#C0DD97">
-            <div class="pan-fill" style="background:#EEF6E0"><div class="pan-name" style="color:#27500A">檸檬</div><div class="pan-en" style="color:#3B6D11">Lemon</div></div>
-            <div class="pan-lbl">¼ GN Pan</div>
-          </div>
-          <div class="pan" style="border-color:#9FE1CB;display:flex;flex-direction:column;">
-            <div style="flex:0 0 20%;background:#E5F6F0;display:flex;align-items:center;justify-content:center;gap:3px;border-bottom:1px dashed #5DCAA5;">
-              <span style="font-size:9px;font-weight:500;color:#085041;">青檸 Lime</span>
-              <span style="font-size:9px;color:#0F6E56;">⅑</span>
+    <div class="tl-item">
+      <div class="tl-time" id="t6">1100</div>
+      <div class="card">
+        <div class="card-title">設置飲品站 — 開店前必須就緒</div>
+        <div class="card-body">
+          <div class="card-item">配料順序：紅豆 → 菠蘿 → 荔枝 → 檸檬 → 青檸（⅑）、薄荷葉（⅙）</div>
+          <div class="card-item">已開罐可樂與 7UP 放在 ⅙ 保冰；擺好糖漿、煉奶、蜂蜜、鹹檸七糖漿</div>
+          <div class="card-item">器具歸位：網篩放入配料；muddler 和雪糕匙分開放入裝水的杯</div>
+        </div>
+        <div class="fridge">
+          <div class="fridge-label">Topping Fridge Layout · Left to Right</div>
+          <div class="pans">
+            <div class="pan">
+              <div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGVsbGlwc2UgY3g9IjIyIiBjeT0iMzAiIHJ4PSIxMiIgcnk9IjE2IiBmaWxsPSIjRjkzQjFEIiBvcGFjaXR5PSIwLjkiLz4KICA8ZWxsaXBzZSBjeD0iMzgiIGN5PSIzMCIgcng9IjEyIiByeT0iMTYiIGZpbGw9IiNDNDJFMTUiIG9wYWNpdHk9IjAuOSIvPgogIDxlbGxpcHNlIGN4PSIyMiIgY3k9IjMwIiByeD0iNSIgcnk9IjciIGZpbGw9IiNGRjZCNEEiIG9wYWNpdHk9IjAuNCIvPgogIDxlbGxpcHNlIGN4PSIzOCIgY3k9IjMwIiByeD0iNSIgcnk9IjciIGZpbGw9IiNGRjZCNEEiIG9wYWNpdHk9IjAuNCIvPgogIDxsaW5lIHgxPSIzMCIgeTE9IjE0IiB4Mj0iMzAiIHkyPSI0NiIgc3Ryb2tlPSIjOEIxQTBBIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4=" alt="紅豆"></div>
+              <div class="pan-en">Red Bean<br>¼ GN</div>
             </div>
-            <div style="flex:1;background:#EEF6E0;position:relative;padding:6px;">
-              <div style="font-size:8px;font-weight:500;color:#27500A;line-height:1.7;">可樂 Cola<br>七喜 7UP</div>
-              <div style="position:absolute;bottom:5px;right:5px;width:34px;height:34px;border-radius:50%;background:#C0DD97;border:1px solid #639922;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                <div style="font-size:7px;font-weight:500;color:#27500A;text-align:center;line-height:1.3;">薄荷葉<br>Mint</div>
+            <div class="pan">
+              <div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMzQiIHJ4PSIxMyIgcnk9IjE3IiBmaWxsPSIjRjkzQjFEIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGxpbmUgeDE9IjIxIiB5MT0iMjciIHgyPSIzOSIgeTI9IjI3IiBzdHJva2U9IiNDNDJFMTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxsaW5lIHgxPSIyMSIgeTE9IjMzIiB4Mj0iMzkiIHkyPSIzMyIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8bGluZSB4MT0iMjEiIHkxPSIzOSIgeDI9IjM5IiB5Mj0iMzkiIHN0cm9rZT0iI0M0MkUxNSIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgPGxpbmUgeDE9IjI1IiB5MT0iMjIiIHgyPSIyNSIgeTI9IjQ4IiBzdHJva2U9IiNDNDJFMTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxsaW5lIHgxPSIzMCIgeTE9IjIwIiB4Mj0iMzAiIHkyPSI1MCIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjEiLz4KICA8bGluZSB4MT0iMzUiIHkxPSIyMiIgeDI9IjM1IiB5Mj0iNDgiIHN0cm9rZT0iI0M0MkUxNSIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgPHBhdGggZD0iTTI0IDE3IFEzMCA4IDM2IDE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNGOTNCMUQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI4IDE1IFEzMCA2IDMyIDE1IiBmaWxsPSJub25lIiBzdHJva2U9IiNGOTNCMUQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTIwIDE5IFEzMCAxMCA0MCAxOSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==" alt="菠蘿"></div>
+              <div class="pan-en">Pineapple<br>¼ GN</div>
+            </div>
+            <div class="pan">
+              <div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMiIgcj0iMTciIGZpbGw9IiNGOTNCMUQiIG9wYWNpdHk9IjAuODUiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjMyIiByPSIxNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMywyIi8+CiAgPGNpcmNsZSBjeD0iMjIiIGN5PSIyNiIgcj0iNCIgZmlsbD0iI0ZGNkI0QSIgb3BhY2l0eT0iMC41Ii8+CiAgPGNpcmNsZSBjeD0iMzQiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0ZGNkI0QSIgb3BhY2l0eT0iMC40Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIzMiIgcj0iMy41IiBmaWxsPSIjRkY2QjRBIiBvcGFjaXR5PSIwLjQ1Ii8+CiAgPGNpcmNsZSBjeD0iMjgiIGN5PSI0MCIgcj0iMyIgZmlsbD0iI0ZGNkI0QSIgb3BhY2l0eT0iMC40Ii8+CiAgPHBhdGggZD0iTTI4IDE1IFEzMCA4IDMzIDEzIiBmaWxsPSJub25lIiBzdHJva2U9IiNDNDJFMTUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwIDkgUTM0IDUgMzYgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0M0MkUxNSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" alt="荔枝"></div>
+              <div class="pan-en">Lychee<br>¼ GN</div>
+            </div>
+            <div class="pan">
+              <div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMzEiIHJ4PSIxNiIgcnk9IjE0IiBmaWxsPSIjRjkzQjFEIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMzEiIHJ4PSIxMCIgcnk9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNkI0QSIgc3Ryb2tlLXdpZHRoPSIwLjgiIG9wYWNpdHk9IjAuNiIvPgogIDxsaW5lIHgxPSIzMCIgeTE9IjE3IiB4Mj0iMzAiIHkyPSI0NSIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjAuOCIgb3BhY2l0eT0iMC41Ii8+CiAgPGxpbmUgeDE9IjE0IiB5MT0iMzEiIHgyPSI0NiIgeTI9IjMxIiBzdHJva2U9IiNDNDJFMTUiIHN0cm9rZS13aWR0aD0iMC44IiBvcGFjaXR5PSIwLjUiLz4KICA8ZWxsaXBzZSBjeD0iMTQiIGN5PSIzMSIgcng9IjQiIHJ5PSIzIiBmaWxsPSIjRjkzQjFEIi8+CiAgPGVsbGlwc2UgY3g9IjQ2IiBjeT0iMzEiIHJ4PSI0IiByeT0iMyIgZmlsbD0iI0Y5M0IxRCIvPgogIDxwYXRoIGQ9Ik0yNyAxNyBRMzAgMTEgMzMgMTciIGZpbGw9IiNDNDJFMTUiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4=" alt="檸檬"></div>
+              <div class="pan-en">Lemon<br>¼ GN</div>
+            </div>
+            <div class="pan-split">
+              <div class="pan-split-top">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMSIgcj0iMTUiIGZpbGw9IiNGOTNCMUQiIG9wYWNpdHk9IjAuNyIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzEiIHI9IjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNkI0QSIgc3Ryb2tlLXdpZHRoPSIwLjgiIG9wYWNpdHk9IjAuNiIvPgogIDxsaW5lIHgxPSIzMCIgeTE9IjE2IiB4Mj0iMzAiIHkyPSI0NiIgc3Ryb2tlPSIjQzQyRTE1IiBzdHJva2Utd2lkdGg9IjAuOCIgb3BhY2l0eT0iMC41Ii8+CiAgPGxpbmUgeDE9IjE1IiB5MT0iMzEiIHgyPSI0NSIgeTI9IjMxIiBzdHJva2U9IiNDNDJFMTUiIHN0cm9rZS13aWR0aD0iMC44IiBvcGFjaXR5PSIwLjUiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjMxIiByPSIzIiBmaWxsPSIjRkY2QjRBIiBvcGFjaXR5PSIwLjUiLz4KPC9zdmc+" alt="青檸">
+                <div style="font-size:5px;font-weight:700;color:#F93B1D;text-align:center;line-height:1.2;">Lime ⅑</div>
               </div>
+              <div class="pan-split-bot">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+CiAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMzIiIHJ4PSIxMiIgcnk9IjkiIGZpbGw9IiNGOTNCMUQiIG9wYWNpdHk9IjAuNzUiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAzMCAzMikiLz4KICA8ZWxsaXBzZSBjeD0iMzAiIGN5PSIyNiIgcng9IjEwIiByeT0iNyIgZmlsbD0iI0M0MkUxNSIgb3BhY2l0eT0iMC44IiB0cmFuc2Zvcm09InJvdGF0ZSgxNSAzMCAyNikiLz4KICA8ZWxsaXBzZSBjeD0iMjQiIGN5PSIzOCIgcng9IjkiIHJ5PSI2IiBmaWxsPSIjRjkzQjFEIiBvcGFjaXR5PSIwLjY1IiB0cmFuc2Zvcm09InJvdGF0ZSgtMTAgMjQgMzgpIi8+CiAgPHBhdGggZD0iTTMwIDQ4IFEzMCAzNSAzMCAyMCIgc3Ryb2tlPSIjOEIxQTBBIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zMCAzMCBRMjIgMjggMjAgMjIiIHN0cm9rZT0iIzhCMUEwQSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zMCAzNiBRMzggMzQgNDAgMjgiIHN0cm9rZT0iIzhCMUEwQSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" alt="薄荷">
+                <div style="font-size:5px;font-weight:700;color:#F93B1D;text-align:center;line-height:1.2;">Mint ⅙</div>
+              </div>
+              <div class="pan-split-en">¼ GN</div>
             </div>
-            <div class="pan-lbl">¼ GN Pan（共用）</div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1100</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0900</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">盛裝焗豬白飯至淺盤冷卻後裝盒</div>
-      <div class="detail-list">
-        <div class="detail-item">準備給隔日使用的炒飯底</div>
-        <div class="detail-item">週五、週六不需要備（週末不售焗豬）</div>
+    <div class="tl-item">
+      <div class="tl-time" id="t7">1100</div>
+      <div class="card">
+        <div class="card-title">盛裝焗豬白飯至淺盤冷卻後裝盒</div>
+        <div class="card-body">
+          <div class="card-item">準備給隔日使用的炒飯底。週五、週六不需要備（週末不售焗豬）</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1100</span><span class="time-label">平日</span>
-      <span class="time-wd" class="time-sep">0900</span><span class="time-label">週末</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">協助其他工作站</div>
-      <div class="detail-list">
-        <div class="detail-item">飲品站任務較少，應比其他站更早就緒</div>
+    <div class="tl-item">
+      <div class="tl-time">1130</div>
+      <div class="card">
+        <div class="card-title">放出餐雞翅（2L × 2）</div>
+        <div class="card-body">
+          <div class="card-item">放入後保溫爐調至 80°C，約 10 分鐘後記得攪拌</div>
+          <div class="card-item warn wd-note">⚠ 雞翅放入 bain marie 最遲 11:30</div>
+          <div class="card-item warn we-note" style="display:none">⚠ 雞翅放入 bain marie 最遲 11:20</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1130</span><span class="time-label">平日</span></div>
-    <div class="content-col">
-      <div class="task-name">放出餐雞翅（2L × 2）</div>
-      <div class="detail-list">
-        <div class="detail-item">放入後保溫爐調至 80°C，約 10 分鐘後記得攪拌</div>
-        <div class="detail-item warn-note">雞翅放入 bain marie 最遲：平日 11:30 / 週末 11:20</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1145</span><span class="time-label">平日</span></div>
-    <div class="content-col">
-      <div class="task-name">調味羅宋湯</div>
-      <div class="detail-list">
-        <div class="detail-item">先加 25ml（1 shot）檸檬汁，再按需調整</div>
+    <div class="tl-item">
+      <div class="tl-time">1145</div>
+      <div class="card">
+        <div class="card-title">調味羅宋湯</div>
+        <div class="card-body">
+          <div class="card-item">先加 25ml（1 shot）檸檬汁，再按需調整</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- SERVICE -->
 <div class="section">
-  <div class="sec-header">
-    <div class="sec-dot" style="background:#D4537E"></div>
-    <span class="sec-title">服務中 Service</span>
-    <span class="sec-time">1200 起</span>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1200</span><span class="time-label">起</span></div>
-    <div class="content-col">
-      <div class="task-name">出餐優先，同時留意煮飯情況</div>
-      <div class="detail-list">
-        <div class="detail-item">通知同伴是否繼續煮下一批飯；飯煮好後協助盛起冷卻</div>
-        <div class="detail-item">平日忙碌時段協助 Pass：裝雞翅、裝湯、盛飯、換飯煲、包外賣等</div>
-        <div class="detail-item">週末高峰時段器具可留水槽讓炸爐站協助清洗，不忙時應自行清洗</div>
+  <div class="section-label">Service</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">1200+</div>
+      <div class="card">
+        <div class="card-title">出餐優先，同時留意煮飯情況</div>
+        <div class="card-body">
+          <div class="card-item">通知同伴是否繼續煮下一批飯；飯煮好後協助盛起冷卻</div>
+          <div class="card-item wd-note">忙碌時段協助 Pass：裝雞翅、裝湯、盛飯、換飯煲、包外賣等</div>
+          <div class="card-item we-note" style="display:none">高峰時段器具可留水槽讓炸爐站協助清洗，不忙時應自行清洗</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row warn">
-    <div class="time-col"><span class="time-wd">全日</span></div>
-    <div class="content-col">
-      <div class="task-name">離開崗位前確認水吧存貨充足</div>
-      <div class="detail-list">
-        <div class="detail-item warn-note">配料、糖漿、豆奶、奶蓋等必須維持一半以上</div>
-        <div class="detail-item warn-note">勿讓接手的人替你補充存貨</div>
+    <div class="tl-item">
+      <div class="tl-time">全日</div>
+      <div class="card">
+        <div class="card-title">離開崗位前確認水吧存貨充足</div>
+        <div class="card-body">
+          <div class="card-item warn">⚠ 配料、糖漿、豆奶、奶蓋等必須維持一半以上</div>
+          <div class="card-item warn">⚠ 勿讓接手的人替你補充存貨</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- PREPARE -->
 <div class="section">
-  <div class="sec-header">
-    <div class="sec-dot" style="background:#BA7517"></div>
-    <span class="sec-title">下午備料 Prepare</span>
-    <span class="sec-time">1200 起，最遲 5pm 完成</span>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1200</span><span class="time-label">起</span></div>
-    <div class="content-col">
-      <div class="task-name">依照 <a href="https://docs.google.com/spreadsheets/d/1Hos-i-0gBf6HOmVmqJVOI2Y9PvdXgB-bAgMdG-seLC0/edit?usp=sharing" target="_blank" style="color:#185FA5;text-decoration:none;border-bottom:1px solid #85B7EB;">Prep List</a> 完成當日備料</div>
-      <div class="detail-list">
-        <div class="detail-item">風房：檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</div>
-        <div class="detail-item">水吧：一般糖漿、荔枝/菠蘿罐頭糖漿、紅豆大罐頭（A 檯後下方）</div>
-        <div class="detail-item">¼ 檸檬片 ≈ 16 顆；⅑ 魷魚檸檬 ≈ 3–4 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉（袋）≈ 3–4 杯</div>
+  <div class="section-label">Prepare</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">1200+</div>
+      <div class="card">
+        <div class="card-title">依照 Prep List 完成當日備料</div>
+        <div class="card-body">
+          <div class="card-item">風房：檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</div>
+          <div class="card-item">水吧：一般糖漿、荔枝/菠蘿罐頭糖漿、紅豆大罐頭（A 檯後下方）</div>
+          <div class="card-item">¼ 檸檬片 ≈ 16 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉（袋）≈ 3–4 杯</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">隨時</span></div>
-    <div class="content-col">
-      <div class="task-name">超前部署：準備隔日開早茶葉與糖</div>
-      <div class="detail-list">
-        <div class="detail-item">準備：茶葉 300g × 2、糖 190g / 300g（放推車第二層）</div>
-        <div class="detail-item">補充：糖罐(KP)、淡奶(KP)、整包茶葉(E 檯)、養樂多、荔枝/菠蘿糖水(5L)</div>
-        <div class="detail-item">香草 & 巧克力冰淇淋（KP Freezer small）</div>
+    <div class="tl-item">
+      <div class="tl-time">備料後</div>
+      <div class="card">
+        <div class="card-title">若水吧備料完成，主動協助其他工作站</div>
+        <div class="card-body">
+          <div class="card-item">切黃油 / 青椒 / 火腿；擦蔥 / 西芹；洋蔥 / 紅蘿蔔去皮；剪辣椒等</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">備料後</span></div>
-    <div class="content-col">
-      <div class="task-name">若水吧備料完成，主動協助其他工作站</div>
-      <div class="detail-list">
-        <div class="detail-item">切黃油 / 青椒 / 火腿；擦蔥 / 西芹；洋蔥 / 紅蘿蔔去皮；剪辣椒等小 task</div>
-      </div>
-    </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1500</span></div>
-    <div class="content-col">
-      <div class="task-name">依照 Deep Clean Task 完成當日深層清潔</div>
-      <div class="detail-list">
-        <div class="detail-item">清潔茶機（週一至週五）：優先清潔較髒的茶機</div>
-        <div class="detail-item">清潔完後補水至 6L，用黃色噴噴擦拭茶機外面</div>
-        <div class="detail-item">保持層架整潔，容器及工具定期整理</div>
+    <div class="tl-item">
+      <div class="tl-time">1500</div>
+      <div class="card">
+        <div class="card-title">完成當日深層清潔</div>
+        <div class="card-body">
+          <div class="card-item wd-note">清潔茶機（週一至週五）：優先清潔較髒的茶機</div>
+          <div class="card-item we-note" style="display:none">清潔茶機：優先清潔較髒的茶機</div>
+          <div class="card-item">清潔完後補水至 6L，用黃色噴噴擦拭茶機外面</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- SOFT CLOSE -->
 <div class="section">
-  <div class="sec-header">
-    <div class="sec-dot" style="background:#5F5E5A"></div>
-    <span class="sec-title">準備收市 Soft Close</span>
-    <span class="sec-time"><span class="tag tag-wd">平日 1730</span><span class="tag tag-we">週末 1700</span></span>
-  </div>
-  <div class="task-row">
-    <div class="time-col">
-      <span class="time-wd">1730</span><span class="time-label">平日起</span>
-      <span class="time-wd" class="time-sep">1700</span><span class="time-label">週末起</span>
-    </div>
-    <div class="content-col">
-      <div class="task-name">確認 Closing Checklist，規劃可提前完成的項目</div>
-      <div class="detail-list">
-        <div class="detail-item">工作台做 2-step cleaning，保留一半繼續接單</div>
-        <div class="detail-item">先將墊子及部分工具拿去清洗（不忙時自行清洗器具）</div>
+  <div class="section-label">Soft Close</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time" id="t9">1730</div>
+      <div class="card">
+        <div class="card-title">確認 Closing Checklist，規劃可提前完成的項目</div>
+        <div class="card-body">
+          <div class="card-item">工作台做 2-step cleaning，保留一半繼續接單</div>
+          <div class="card-item">先將墊子及部分工具拿去清洗</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">1900</span><span class="time-label">–1930</span></div>
-    <div class="content-col">
-      <div class="task-name">關閉後方保溫爐；最後一煲飯後關閉飯煲並清潔</div>
-      <div class="detail-list">
-        <div class="detail-item">沙爹牛肉、雞湯剩一半可換至 ⅙</div>
-        <div class="detail-item">雞翅集中放在同一個 ⅓，詢問 DS 是否保留另一個瑞士雞翅汁</div>
+    <div class="tl-item">
+      <div class="tl-time">1900–1930</div>
+      <div class="card">
+        <div class="card-title">關閉後方保溫爐；最後一煲飯後關閉飯煲並清潔</div>
+        <div class="card-body">
+          <div class="card-item">沙爹牛肉、雞湯剩一半可換至 ⅙</div>
+          <div class="card-item">雞翅集中放在同一個 ⅓，詢問 DS 是否保留另一個瑞士雞翅汁</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- CLOSING -->
 <div class="section">
-  <div class="sec-header">
-    <div class="sec-dot" style="background:#2C2C2A"></div>
-    <span class="sec-title">收市 Closing</span>
-    <span class="sec-time">2000</span>
-  </div>
-  <div class="task-row warn">
-    <div class="time-col"><span class="time-wd">2000</span></div>
-    <div class="content-col">
-      <div class="task-name">所有配料、淡奶、煉奶等包保鮮膜放回冰箱</div>
-      <div class="detail-list">
-        <div class="detail-item">一般糖漿、蜂蜜、5L 糖水、青檸/檸檬汁不需要冰</div>
-        <div class="detail-item warn-note">紅豆冰奶、奶蓋等奶類必須冰在 Bar 1，確保夠低溫</div>
+  <div class="section-label">Closing</div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title">所有配料、淡奶、煉奶等包保鮮膜放回冰箱</div>
+        <div class="card-body">
+          <div class="card-item">一般糖漿、蜂蜜、5L 糖水、青檸/檸檬汁不需要冰</div>
+          <div class="card-item warn">⚠ 紅豆冰奶、奶蓋等奶類必須冰在 Bar 1，確保夠低溫</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">2000</span></div>
-    <div class="content-col">
-      <div class="task-name">收拾所有糖漿瓶嘴及剩餘工具與容器去清洗</div>
-      <div class="detail-list">
-        <div class="detail-item warn-note">水吧器具只能在 Show Kitchen 清洗</div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title">收拾所有糖漿瓶嘴及剩餘工具與容器去清洗</div>
+        <div class="card-body">
+          <div class="card-item warn">⚠ 水吧器具只能在 Show Kitchen 清洗</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">2000</span></div>
-    <div class="content-col">
-      <div class="task-name">SOAP 清潔各區域</div>
-      <div class="detail-list">
-        <div class="detail-item">水吧檯面、製冰機、所有保溫爐、兩個飯煲</div>
-        <div class="detail-item">包裝區域、保鮮膜架、冰櫃等</div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title">SOAP 清潔各區域</div>
+        <div class="card-body">
+          <div class="card-item">水吧檯面、製冰機、所有保溫爐、兩個飯煲、包裝區域、保鮮膜架、冰櫃等</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">2000</span></div>
-    <div class="content-col">
-      <div class="task-name">幫忙拿所有器具至 KP 清洗，食材放回風房</div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title">幫忙拿所有器具至 KP 清洗，食材放回風房</div>
+      </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">隨時</span></div>
-    <div class="content-col">
-      <div class="task-name">隨時下樓拿乾淨工具回 Show Kitchen 並擺放歸位</div>
+    <div class="tl-item">
+      <div class="tl-time">隨時</div>
+      <div class="card">
+        <div class="card-title">隨時下樓拿乾淨工具回 Show Kitchen 並擺放歸位</div>
+      </div>
     </div>
-  </div>
-  <div class="task-row">
-    <div class="time-col"><span class="time-wd">最後</span></div>
-    <div class="content-col">
-      <div class="task-name">再次確認及完成所有 Closing Checklist</div>
+    <div class="tl-item">
+      <div class="tl-time">最後</div>
+      <div class="card">
+        <div class="card-title">再次確認及完成所有 Closing Checklist</div>
+      </div>
     </div>
   </div>
 </div>
 
-</div>
+<script>
+var times={wd:["1000","1010","1015","1020","1050","1100","1100","1730"],we:["0800","0810","0815","0820","0845","0840","0900","1700"]};
+var ids=["t1","t2","t3","t4","t5","t6","t7","t9"];
+function setMode(m){
+  var isWd=m==="wd";
+  document.getElementById("btn-wd").className="toggle-btn"+(isWd?" active":"");
+  document.getElementById("btn-we").className="toggle-btn"+(!isWd?" active":"");
+  ids.forEach(function(id,i){var el=document.getElementById(id);if(el)el.textContent=times[m][i];});
+  document.querySelectorAll(".wd-note").forEach(function(el){el.style.display=isWd?"":"none";});
+  document.querySelectorAll(".we-note").forEach(function(el){el.style.display=isWd?"none":"";});
+}
+setMode("wd");
+</script>
 </body>
 </html>
