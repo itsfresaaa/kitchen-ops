@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Fryer Station · Daily Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Responsive scale ── */
+    :root { --s: 1; }
+    @media (min-width: 500px)  { :root { --s: 1.5; } }
+    @media (min-width: 900px)  { :root { --s: 2; } }
+    html { font-size: calc(16px * var(--s)); }
+
+    body {
+      font-family: "Roboto Condensed", sans-serif;
+      background: #fff;
+      color: #000;
+      max-width: calc(402px * var(--s));
+      margin: 0 auto;
+      padding: 0 0 5rem;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; padding: 1.375rem 1.25rem .875rem; }
+    .logo { width: 9.8rem; height: 2.75rem; object-fit: contain; display: block; margin: 0 auto; }
+    .daily-ops { font-weight: 900; font-size: .5625rem; letter-spacing: .72em; color: #F93B1D; text-transform: uppercase; margin-top: .3rem; padding-right: .72em; }
+
+    /* ── Station title row ── */
+    .station-wrap { padding: .875rem 3.2rem 0; }
+    .station-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+    .station-name { font-weight: 700; font-size: .75rem; color: #F93B1D; letter-spacing: .08em; }
+    .lang-btn {
+      background: none; border: .5px solid #F93B1D; border-radius: 3px;
+      padding: .15rem .4rem; cursor: pointer; font-family: inherit;
+      font-size: .4rem; font-weight: 700; letter-spacing: .06em;
+      color: #F93B1D; text-transform: uppercase;
+      transition: background .15s, color .15s;
+    }
+    .lang-btn:hover { background: #F93B1D; color: #fff; }
+    .station-line { border-top: 1px solid #F93B1D; }
+
+    /* ── Day toggle ── */
+    .toggle-wrap { display: flex; margin: .875rem 3.2rem 0; border: 1px solid #F93B1D; overflow: hidden; }
+    .toggle-btn { flex: 1; padding: .5rem 0; font-family: inherit; font-size: .625rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border: none; background: transparent; cursor: pointer; color: #999; transition: all .15s; }
+    .toggle-btn.active { background: #F93B1D; color: #fff; }
+    .toggle-btn:not(:first-child) { border-left: 1px solid #F93B1D; }
+    .time-ref { font-size: .4375rem; color: #BBB; text-align: center; margin: .25rem 3.2rem 0; letter-spacing: .08em; }
+
+    /* ── Section ── */
+    .section { padding: .75rem 3.2rem 0; }
+    .section-header { display: flex; align-items: center; gap: .375rem; margin-bottom: .625rem; }
+    .section-label { font-weight: 700; font-size: .75rem; color: #F93B1D; white-space: nowrap; }
+    .section-rule { flex: 1; border-top: .5px solid #F93B1D; opacity: .4; }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 2.75rem; }
+    .tl-item { position: relative; margin-bottom: .625rem; }
+    .tl-item::before { content: ""; position: absolute; left: -1.125rem; top: .8rem; bottom: -.625rem; border-left: .8px solid #F93B1D; z-index: 0; }
+    .tl-item:last-child::before { display: none; }
+    .tl-time { position: absolute; right: calc(100% + .5rem); top: .4375rem; width: 2.4rem; font-weight: 700; font-size: .42rem; color: #F93B1D; text-align: right; white-space: nowrap; z-index: 2; background: #fff; line-height: 1.3; }
+
+    /* ── Card ── */
+    .card { background: rgba(245,245,245,.54); border: .5px solid #F93B1D; border-radius: 5px; padding: .5rem .625rem; position: relative; z-index: 1; }
+    .card-title { font-weight: 700; font-size: .5rem; line-height: .5625rem; color: #F93B1D; margin-bottom: .3rem; }
+    .card-body { font-weight: 500; font-size: .375rem; line-height: .5625rem; color: #000; }
+    .card-item { margin-bottom: .125rem; }
+    .card-item.warn { color: #F93B1D; }
+
+    /* ── Lang ── */
+    .card-title.zh { display: block; }
+    .card-title.en { display: none; }
+    .lang-en .card-title.zh { display: none; }
+    .lang-en .card-title.en { display: block; }
+    .card-item.zh { display: block; }
+    .card-item.en { display: none; }
+    .lang-en .card-item.zh { display: none; }
+    .lang-en .card-item.en { display: block; }
+    .section-label.zh { display: block; }
+    .section-label.en { display: none; }
+    .lang-en .section-label.zh { display: none; }
+    .lang-en .section-label.en { display: block; }
+
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <img class="logo" src="https://images.squarespace-cdn.com/content/v1/6044045ecacc5f3deb4792ea/926ddcee-8c67-481f-8ec1-66bac7273c59/weblogo_hoko+copy.png?format=1500w" alt="HOKO">
+  <div class="daily-ops">Daily Operations</div>
+</div>
+
+<!-- ── Station title ── -->
+<div class="station-wrap">
+  <div class="station-row">
+    <div class="station-name">FRYER STATION</div>
+    <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
+  </div>
+  <div class="station-line"></div>
+</div>
+
+<!-- ── Day toggle ── -->
+<div class="toggle-wrap">
+  <button class="toggle-btn active" id="btn-wd" onclick="setMode('wd')">Weekday</button>
+  <button class="toggle-btn" id="btn-we" onclick="setMode('we')">Weekend</button>
+</div>
+<div class="time-ref">Times for reference only</div>
+
+
+<!-- ════════ OPENING (週末) ════════ -->
+<div class="section we-note">
+  <div class="section-header">
+    <span class="section-label zh">Opening（週末 08:00 – 09:00）</span>
+    <span class="section-label en">Opening (Weekend 08:00 – 09:00)</span>
+    <span class="section-rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time">0800–0815</div>
+      <div class="card">
+        <div class="card-title zh">清潔炸爐、補油；開啟所有炸爐</div>
+        <div class="card-title en">Clean Fryers, Top Up Oil; Turn On All Fryers</div>
+        <div class="card-body">
+          <div class="card-item zh">包含煎蛋器油與油瓶</div>
+          <div class="card-item en">Including egg pan oil and oil bottles</div>
+          <div class="card-item zh">確認溫度燈：紅/橙 = 加熱中，綠 = 就緒</div>
+          <div class="card-item en">Check indicator light: red/orange = heating, green = ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">0815–0820</div>
+      <div class="card">
+        <div class="card-title zh">風房取物資</div>
+        <div class="card-title en">Retrieve Items from Walk-in</div>
+        <div class="card-body">
+          <div class="card-item zh">生豬扒、粉漿、魷魚、方包</div>
+          <div class="card-item en">Raw pork chops, batter, squid, loaf bread</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">0820–0830</div>
+      <div class="card">
+        <div class="card-title zh">準備花生醬西多；協助烤叉燒</div>
+        <div class="card-title en">Prep Peanut Butter Toast; Help Roast Char Siu</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">0830–0840</div>
+      <div class="card">
+        <div class="card-title zh">設置早餐工作站；洗抹布</div>
+        <div class="card-title en">Set Up Breakfast Station; Clean Cloths</div>
+        <div class="card-body">
+          <div class="card-item zh">夾子、網籃、鋪鋁箔紙、西多蛋液/冰塊、貝果</div>
+          <div class="card-item en">Tongs, fry basket, foil, French toast egg mix/ice, bagel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">0845–0900</div>
+      <div class="card">
+        <div class="card-title zh">調製豬扒粉漿</div>
+        <div class="card-title en">Mix Pork Chop Batter</div>
+        <div class="card-body">
+          <div class="card-item zh">拌勻 → 加泡打粉 → 加油拌至看不到油</div>
+          <div class="card-item en">Mix well → add baking powder → add oil and mix until oil disappears</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">0900–1000</div>
+      <div class="card">
+        <div class="card-title zh">預炸豬扒和魷魚（訂單優先）</div>
+        <div class="card-title en">Pre-fry Pork Chops &amp; Squid (orders first)</div>
+        <div class="card-body">
+          <div class="card-item zh">完全冷卻後放入盒中</div>
+          <div class="card-item en">Let cool completely before boxing</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ MID-MORNING PREP ════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-label">Mid-Morning Prep (10:00 – 12:00)</span>
+    <span class="section-rule"></span>
+  </div>
+  <div class="timeline">
+
+    <!-- 平日 opening tasks (no separate opening section for wd) -->
+    <div class="tl-item wd-note">
+      <div class="tl-time">1000–1015</div>
+      <div class="card">
+        <div class="card-title zh">清潔炸爐、補油；開啟所有炸爐</div>
+        <div class="card-title en">Clean Fryers, Top Up Oil; Turn On All Fryers</div>
+        <div class="card-body">
+          <div class="card-item zh">包含煎蛋器皿油與油瓶</div>
+          <div class="card-item en">Including egg pan oil and oil bottles</div>
+          <div class="card-item zh">確認溫度燈：紅/橙 = 加熱中，綠 = 就緒</div>
+          <div class="card-item en">Check indicator light: red/orange = heating, green = ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1020–1025</div>
+      <div class="card">
+        <div class="card-title zh">風房取物資</div>
+        <div class="card-title en">Retrieve Items from Walk-in</div>
+        <div class="card-body">
+          <div class="card-item zh">生豬扒、粉漿、魷魚、方包等等</div>
+          <div class="card-item en">Raw pork chops, batter, squid, loaf bread etc.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1025–1027</div>
+      <div class="card">
+        <div class="card-title zh">清洗抹布歸站</div>
+        <div class="card-title en">Clean Cloths &amp; Return to Station</div>
+        <div class="card-body">
+          <div class="card-item zh">藍 = 飲品｜咖 = 出菜台及叉燒｜橙 = 炸爐</div>
+          <div class="card-item en">Blue = drinks | Brown = pass &amp; char siu | Orange = fryer</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1030–1040</div>
+      <div class="card">
+        <div class="card-title zh">煮第一批米（4 杯）</div>
+        <div class="card-title en">Cook First Batch of Rice (4 cups)</div>
+        <div class="card-body">
+          <div class="card-item zh">鋪墊、加水至水位線 20，加油後攪拌防結塊</div>
+          <div class="card-item en">Lay mat, fill water to line 20, add oil and stir to prevent clumping</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1030–1050</div>
+      <div class="card">
+        <div class="card-title zh">預炸魷魚</div>
+        <div class="card-title en">Pre-fry Squid</div>
+        <div class="card-body">
+          <div class="card-item zh">瀝油 2–3 分鐘，攤開冷卻</div>
+          <div class="card-item en">Drain for 2–3 min, spread out to cool</div>
+          <div class="card-item zh">放入 4L 盒放雪櫃，留 3–4 份備午市</div>
+          <div class="card-item en">Place in 4L container in fridge; keep 3–4 portions for lunch service</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1050–1130</div>
+      <div class="card">
+        <div class="card-title zh">調製豬扒粉漿 &amp; 開始預炸豬扒</div>
+        <div class="card-title en">Mix Pork Chop Batter &amp; Start Pre-frying</div>
+        <div class="card-body">
+          <div class="card-item zh">拌勻 → 加泡打粉 → 加油拌至看不到油</div>
+          <div class="card-item en">Mix well → add baking powder → add oil and mix until oil disappears</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 週末 mid-morning -->
+    <div class="tl-item we-note">
+      <div class="tl-time">1020–1025</div>
+      <div class="card">
+        <div class="card-title zh">煮第一批米（4 杯）</div>
+        <div class="card-title en">Cook First Batch of Rice (4 cups)</div>
+      </div>
+    </div>
+
+    <div class="tl-item we-note">
+      <div class="tl-time">1025–1130</div>
+      <div class="card">
+        <div class="card-title zh">繼續預炸豬扒、魷魚</div>
+        <div class="card-title en">Continue Pre-frying Pork Chops &amp; Squid</div>
+        <div class="card-body">
+          <div class="card-item zh">完成後整理工作站、清洗器具</div>
+          <div class="card-item en">After done, tidy station and wash equipment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 共用 -->
+    <div class="tl-item wd-note">
+      <div class="tl-time">1135</div>
+      <div class="card">
+        <div class="card-title zh">煮第二批米（4 杯）</div>
+        <div class="card-title en">Cook Second Batch of Rice (4 cups)</div>
+      </div>
+    </div>
+
+    <div class="tl-item we-note">
+      <div class="tl-time">1115</div>
+      <div class="card">
+        <div class="card-title zh">煮第二批米（4 杯）</div>
+        <div class="card-title en">Cook Second Batch of Rice (4 cups)</div>
+      </div>
+    </div>
+
+    <div class="tl-item we-note">
+      <div class="tl-time">1130–1145</div>
+      <div class="card">
+        <div class="card-title zh">設置午餐工作站－準備食材</div>
+        <div class="card-title en">Set Up Lunch Station — Prepare Ingredients</div>
+        <div class="card-body">
+          <div class="card-item zh">薯仔、青椒、豆腐、豬扒、魷魚（3–4 份）</div>
+          <div class="card-item en">Potato, capsicum, tofu, pork chop, squid (3–4 portions)</div>
+          <div class="card-item zh">（如需）補蛋漿；補花生醬西多</div>
+          <div class="card-item en">If needed: top up egg mix; prep more peanut butter toast</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item wd-note">
+      <div class="tl-time">1145–1200</div>
+      <div class="card">
+        <div class="card-title zh">右邊炸爐開至最高火</div>
+        <div class="card-title en">Right Fryer to Max Heat</div>
+        <div class="card-body">
+          <div class="card-item zh">如炸完豬扒則兩邊皆開至最高</div>
+          <div class="card-item en">If done pre-frying pork chops, both sides to max</div>
+          <div class="card-item zh">設置工作站－準備器具：夾子、網籃、鋪鋁箔紙、西多蛋液/冰塊</div>
+          <div class="card-item en">Set up tools: tongs, fry basket, foil, French toast egg mix/ice</div>
+          <div class="card-item zh">設置工作站－準備食材：豬扒、魷魚、豆腐、薯仔、青椒</div>
+          <div class="card-item en">Set up ingredients: pork chop, squid, tofu, potato, capsicum</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item we-note">
+      <div class="tl-time">1145–1200</div>
+      <div class="card">
+        <div class="card-title zh">設置午餐工作站</div>
+        <div class="card-title en">Set Up Lunch Station</div>
+        <div class="card-body">
+          <div class="card-item zh">右邊炸爐開至最高火</div>
+          <div class="card-item en">Right fryer to max heat</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ LUNCH SERVICE & AFTERNOON ════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-label">Lunch Service &amp; Afternoon (12:00 – 17:30)</span>
+    <span class="section-rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time">1200–1430</div>
+      <div class="card">
+        <div class="card-title zh">午市服務——優先處理訂單</div>
+        <div class="card-title en">Lunch Service — Prioritise Orders</div>
+        <div class="card-body">
+          <div class="card-item wd-note zh">如不忙繼續預炸豬扒；完全冷卻後放入盒中</div>
+          <div class="card-item wd-note en">If quiet, continue pre-frying pork chops; let cool completely before boxing</div>
+          <div class="card-item we-note zh">高峰時段優先煮米；幫忙燒叉燒</div>
+          <div class="card-item we-note en">Peak hours: prioritise cooking rice; help roast char siu</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1430–1500</div>
+      <div class="card">
+        <div class="card-title zh">預炸牛肉（如需）</div>
+        <div class="card-title en">Pre-fry Beef (if needed)</div>
+        <div class="card-body">
+          <div class="card-item zh">保持洗碗區整潔</div>
+          <div class="card-item en">Keep sink area clean</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1500–1530</div>
+      <div class="card">
+        <div class="card-title zh">準備隔日豬扒粉漿</div>
+        <div class="card-title en">Prep Tomorrow's Pork Chop Batter</div>
+        <div class="card-body">
+          <div class="card-item zh">留意橙桶裝滿便拿去 KP</div>
+          <div class="card-item en">Take orange bin to KP when full</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1630–1730</div>
+      <div class="card">
+        <div class="card-title zh">完成每日深層清潔</div>
+        <div class="card-title en">Complete Deep Clean for the Day</div>
+        <div class="card-body">
+          <div class="card-item we-note zh">保持洗碗區整潔</div>
+          <div class="card-item we-note en">Keep sink area clean</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ SOFT CLOSE ════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-label zh">Soft Close（平日 17:30 – 18:30 ｜ 週末 17:00 – 18:00）</span>
+    <span class="section-label en">Soft Close (WD 17:30–18:30 | WE 17:00–18:00)</span>
+    <span class="section-rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time wd-note">1730–1800</div>
+      <div class="tl-time we-note" style="display:none">1700–1800</div>
+      <div class="card">
+        <div class="card-title zh">請提前確認 Closing Checklist，規劃可提前完成的項目</div>
+        <div class="card-title en">Review Closing Checklist — Plan What Can Be Done Early</div>
+        <div class="card-body">
+          <div class="card-item zh">確保有足夠時間準時完成收店工作</div>
+          <div class="card-item en">Ensure enough time to finish closing on time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time"></div>
+      <div class="card">
+        <div class="card-title zh">收市程序</div>
+        <div class="card-title en">Closing Procedure</div>
+        <div class="card-body">
+          <div class="card-item zh">將多餘托盤及容器送往洗碗區</div>
+          <div class="card-item en">Send excess trays and containers to washing area</div>
+          <div class="card-item zh">清潔洗碗區；清掃雪櫃後方；擦牆及水槽下方</div>
+          <div class="card-item en">Clean sink area; sweep behind fridge; wipe walls and under sink</div>
+          <div class="card-item zh">擦容器蓋；取走魷魚托盤送洗</div>
+          <div class="card-item en">Wipe container lids; send squid tray for washing</div>
+          <div class="card-item zh">提早刮走炸爐殘渣，避免交叉污染</div>
+          <div class="card-item en">Scrape fryer residue early to avoid cross-contamination</div>
+          <div class="card-item zh">擦推車；清掃工作台及推車底部</div>
+          <div class="card-item en">Wipe trolley; sweep work counter and trolley base</div>
+          <div class="card-item zh">清潔微波爐及雪櫃內部；如炸爐已提早關機則過濾油</div>
+          <div class="card-item en">Clean microwave and fridge interior; filter oil if fryers turned off early</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1815–2015</div>
+      <div class="card">
+        <div class="card-title zh">倒垃圾</div>
+        <div class="card-title en">Take Out Rubbish</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+  <script>
+
+    /* ── Day mode ── */
+    function setMode(m) {
+      var isWd = m === "wd";
+      document.getElementById("btn-wd").className = "toggle-btn" + (isWd ? " active" : "");
+      document.getElementById("btn-we").className = "toggle-btn" + (!isWd ? " active" : "");
+      document.querySelectorAll(".wd-note").forEach(function(el){ el.style.display = isWd ? "" : "none"; });
+      document.querySelectorAll(".we-note").forEach(function(el){ el.style.display = isWd ? "none" : ""; });
+    }
+    setMode("wd");
+
+    /* ── Language toggle ── */
+    var isEn = false;
+    function toggleLang() {
+      isEn = !isEn;
+      document.body.classList.toggle("lang-en", isEn);
+      document.getElementById("lang-btn").textContent = isEn ? "CHI" : "EN";
+    }
+
+  </script>
+
+</body>
+</html>
