@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drink Station Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --s: 1; }
+    @media (min-width: 500px)  { :root { --s: 1.5; } }
+    @media (min-width: 900px)  { :root { --s: 2; } }
+    html { font-size: calc(16px * var(--s)); }
+    body { font-family:"Roboto Condensed",sans-serif; background:#fff; color:#000; max-width:calc(402px * var(--s)); margin:0 auto; padding:0 0 5rem; }
+
+    .header { text-align:center; padding:1.375rem 1.25rem .875rem; }
+    .logo { width:9.8rem; height:2.75rem; object-fit:contain; display:block; margin:0 auto; }
+    .daily-ops { font-weight:900; font-size:.5625rem; letter-spacing:.72em; color:#F93B1D; text-transform:uppercase; margin-top:.3rem; padding-right:.72em; }
+
+    .station-wrap { padding:.875rem 3.2rem 0; }
+    .station-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
+    .station-name { font-weight:700; font-size:.75rem; color:#F93B1D; letter-spacing:.08em; }
+    .lang-btn { display:flex; align-items:center; gap:.2rem; background:none; border:.5px solid #F93B1D; border-radius:3px; padding:.15rem .35rem; cursor:pointer; font-family:inherit; font-size:.4rem; font-weight:700; letter-spacing:.06em; color:#F93B1D; text-transform:uppercase; transition:background .15s,color .15s; }
+    .lang-btn:hover { background:#F93B1D; color:#fff; }
+    .station-line { border-top:1px solid #F93B1D; }
+
+    .toggle-wrap { display:flex; margin:.875rem 3.2rem 0; border:1px solid #F93B1D; overflow:hidden; }
+    .toggle-btn { flex:1; padding:.5rem 0; font-family:inherit; font-size:.625rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border:none; background:transparent; cursor:pointer; color:#999; transition:all .15s; }
+    .toggle-btn.active { background:#F93B1D; color:#fff; }
+    .toggle-btn:not(:first-child) { border-left:1px solid #F93B1D; }
+    .time-ref { font-size:.4375rem; color:#BBB; text-align:center; margin:.25rem 3.2rem 0; letter-spacing:.08em; }
+
+    .section { padding:.75rem 3.2rem 0; }
+    .section-header { display:flex; align-items:center; gap:.375rem; margin-bottom:.625rem; }
+    .section-label { font-weight:700; font-size:.75rem; color:#F93B1D; white-space:nowrap; }
+    .section-rule { flex:1; border-top:.5px solid #F93B1D; opacity:.4; }
+
+    .timeline { position:relative; padding-left:2.75rem; }
+    .tl-item { position:relative; margin-bottom:.625rem; }
+    .tl-item::before { content:""; position:absolute; left:-1.125rem; top:.8rem; bottom:-.625rem; border-left:.8px solid #F93B1D; z-index:0; }
+    .tl-item:last-child::before { display:none; }
+    .tl-time { position:absolute; right:calc(100% + .5rem); top:.4375rem; width:2rem; font-weight:700; font-size:.5rem; color:#F93B1D; text-align:right; white-space:nowrap; z-index:2; background:#fff; }
+
+    .card { background:rgba(245,245,245,.54); border:.5px solid #F93B1D; border-radius:5px; padding:.5rem .625rem; position:relative; z-index:1; }
+    .card-title { font-weight:700; font-size:.5rem; line-height:.5625rem; color:#F93B1D; margin-bottom:.3rem; }
+    .card-body { font-weight:500; font-size:.375rem; line-height:.5625rem; color:#000; }
+    .card-item { margin-bottom:.125rem; }
+    .card-item.warn { color:#F93B1D; }
+
+    /* lang */
+    .zh { display:block; }
+    .en { display:none; }
+    .lang-en .zh { display:none; }
+    .lang-en .en { display:block; }
+    .card-item.zh { display:block; }
+    .card-item.en { display:none; }
+    .lang-en .card-item.zh { display:none; }
+    .lang-en .card-item.en { display:block; }
+
+    /* ── Prepare card (fixed px — not scaled) ── */
+    .prep-tips { background:rgba(249,59,29,0.05); border:0.5px solid rgba(249,59,29,0.25); border-radius:3px; padding:5px 7px; margin:4px 0 6px; }
+    .prep-tips-label { font-weight:700; font-size:6px !important; color:#F93B1D; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
+    .prep-tips-body { font-size:6px !important; color:#000; line-height:9px !important; }
+    .prep-rows { display:flex; flex-direction:column; gap:4px; }
+    .prep-row { display:grid; grid-template-columns:30px 1fr; gap:5px; align-items:baseline; }
+    .prep-tag { font-weight:700; font-size:5.5px !important; color:#fff; background:#F93B1D; border-radius:3px; padding:1px 4px; text-align:center; white-space:nowrap; line-height:9px !important; display:block; }
+    .prep-content { font-size:6px !important; color:#000; line-height:9px !important; }
+    .prep-content.zh { display:block; }
+    .prep-content.en { display:none; }
+    .lang-en .prep-content.zh { display:none; }
+    .lang-en .prep-content.en { display:block; }
+    .prep-tips-body.zh { display:block; }
+    .prep-tips-body.en { display:none; }
+    .lang-en .prep-tips-body.zh { display:none; }
+    .lang-en .prep-tips-body.en { display:block; }
+
+    /* ── Topping fridge (fixed px) ── */
+    .fridge { margin-top:8px; border:0.5px solid #F93B1D; border-radius:4px; padding:6px 6px 5px; background:rgba(245,245,245,0.4); }
+    .fridge-label { font-size:6px !important; letter-spacing:0.1em; text-transform:uppercase; color:#F93B1D; text-align:center; margin-bottom:6px; font-weight:700; }
+    .pans { display:flex; gap:3px; height:80px; }
+    .pan { flex:1; border-radius:3px; border:0.5px solid #F93B1D; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,0.8); }
+    .pan-icon { flex:1; display:flex; align-items:center; justify-content:center; padding:3px 2px; }
+    .pan-icon img { width:100%; max-width:34px; height:auto; }
+    .pan-en { font-size:5.5px !important; font-weight:700; color:#F93B1D; text-align:center; letter-spacing:0.05em; padding:2px 2px 3px; border-top:0.5px solid #F93B1D; line-height:1.2; }
+    .pan-split { flex:1; border:0.5px solid #F93B1D; border-radius:3px; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,0.8); }
+    .pan-split-top { flex:0 0 55%; display:flex; flex-direction:column; align-items:center; justify-content:center; border-bottom:0.5px dashed #F93B1D; padding:2px; }
+    .pan-split-top img { width:100%; max-width:26px; height:auto; }
+    .pan-split-bot { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2px; }
+    .pan-split-bot img { width:100%; max-width:20px; height:auto; }
+    .pan-split-en { font-size:5px !important; font-weight:700; color:#F93B1D; text-align:center; padding:2px 2px 3px; border-top:0.5px solid #F93B1D; letter-spacing:0.05em; }
+
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img class="logo" src="https://images.squarespace-cdn.com/content/v1/6044045ecacc5f3deb4792ea/926ddcee-8c67-481f-8ec1-66bac7273c59/weblogo_hoko+copy.png?format=1500w" alt="HOKO">
+  <div class="daily-ops">Daily Operations</div>
+</div>
+
+<div class="station-wrap">
+  <div class="station-row">
+    <div class="station-name">DRINK STATION</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">EN</button>
+  </div>
+  <div class="station-line"></div>
+</div>
+
+<div class="toggle-wrap">
+  <button class="toggle-btn active" id="btn-wd" onclick="setMode('wd')">Weekday</button>
+  <button class="toggle-btn" id="btn-we" onclick="setMode('we')">Weekend</button>
+</div>
+<div class="time-ref">Times for reference only</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-label">Opening</span><span class="section-rule"></span></div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time" id="t1">1000</div>
+      <div class="card">
+        <div class="card-title zh">開啟所有開關</div>
+        <div class="card-title en">Turn On All Switches</div>
+        <div class="card-body">
+          <div class="card-item zh">保溫爐（一個手動開、一個定時自動）</div>
+          <div class="card-item en">Bain marie (one manual, one auto-timer)</div>
+          <div class="card-item zh">飯鍋、茶機、茶杯保溫機、熱水機</div>
+          <div class="card-item en">Rice cooker, tea kettle, cup warmer, hot water dispenser</div>
+          <div class="card-item zh">配料雪櫃（先擦乾內部水份）、iPad、打印機</div>
+          <div class="card-item en">Topping fridge (wipe interior dry first), iPad, printer</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t2">1010</div>
+      <div class="card">
+        <div class="card-title zh">煮茶：茶葉 300g → P2 → Start</div>
+        <div class="card-title en">Brew Tea: 300g leaves → P2 → Start</div>
+        <div class="card-body">
+          <div class="card-item zh">確認水位在 6L；輕搖茶器使茶葉平鋪再放入茶機。煮茶約 30 分鐘。</div>
+          <div class="card-item en">Check water level at 6L; shake basket to spread leaves flat. Brew ~30 min.</div>
+          <div class="card-item warn wd-note zh">⚠ 平日 2 壺茶通常足夠；若 4pm 前低於 2.5L，詢問 DS</div>
+          <div class="card-item warn wd-note en">⚠ Weekday: 2 batches usually enough. If drops below 2.5L before 4pm, check with DS</div>
+          <div class="card-item warn we-note zh">⚠ 週末持續煮茶至 3pm，煮茶優先於接單</div>
+          <div class="card-item warn we-note en">⚠ Weekend: keep brewing until 3pm — priority over taking orders</div>
+          <div class="card-item warn zh">⚠ 可先用 B mode 預熱水</div>
+          <div class="card-item warn en">⚠ Use B mode to pre-heat water</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t3">1015</div>
+      <div class="card">
+        <div class="card-title zh">慢煮雞翅：每 10 分鐘翻動，共 30 分鐘</div>
+        <div class="card-title en">Slow-cook Wings: turn every 10 min, 30 min total</div>
+        <div class="card-body">
+          <div class="card-item warn zh">⚠ 必須使用已預煮過的雞翅，不可使用生雞翅</div>
+          <div class="card-item warn en">⚠ Pre-cooked wings only — never raw</div>
+          <div class="card-item zh">完成後撈起瀝乾，放 2L 盒、貼標籤、送回風房（FIFO）</div>
+          <div class="card-item en">Drain, place in 2L containers, label and return to cold room (FIFO)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t4">1020</div>
+      <div class="card">
+        <div class="card-title zh">打蛋：依照 Preplist — 完成後清潔桌面換手套</div>
+        <div class="card-title en">Beat Eggs: per Preplist — clean surface &amp; change gloves after</div>
+        <div class="card-body">
+          <div class="card-item zh">滑蛋加入淡奶、鹽、MSG → blender → 過篩 → 容器 → 標籤 → 風房</div>
+          <div class="card-item en">Add evaporated milk, salt, MSG → blend → strain → container → label → cold room</div>
+          <div class="card-item warn zh">⚠ 盡量先完成打蛋再開設飲品站，防止交叉污染</div>
+          <div class="card-item warn en">⚠ Finish egg prep before setting up drink station to avoid cross-contamination</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t5">1050</div>
+      <div class="card">
+        <div class="card-title zh">過濾茶 &amp; 準備檸檬茶底 — 開店前必須就緒</div>
+        <div class="card-title en">Strain Tea &amp; Prep Lemon Tea Base — must be ready before opening</div>
+        <div class="card-body">
+          <div class="card-item zh">過濾兩個茶機；沖洗一個茶壺倒回，設定 B mode 保溫</div>
+          <div class="card-item en">Strain both kettles; rinse one, pour back, set to B mode keep-warm</div>
+          <div class="card-item zh">製作檸檬茶底：無糖、少糖、正常</div>
+          <div class="card-item en">Prep lemon tea bases: no sugar, less sugar, regular</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t6">1100</div>
+      <div class="card">
+        <div class="card-title zh">設置飲品站 — 開店前必須就緒</div>
+        <div class="card-title en">Set Up Drink Station — must be ready before opening</div>
+        <div class="card-body">
+          <div class="card-item zh">配料順序：紅豆 → 菠蘿 → 荔枝 → 檸檬 → 青檸（⅑）、薄荷葉（⅙）</div>
+          <div class="card-item en">Topping order: Red Bean → Pineapple → Lychee → Lemon → Lime (⅑), Mint (⅙)</div>
+          <div class="card-item zh">已開罐可樂與 7UP 放在 ⅙ 保冰；擺好糖漿、煉奶、蜂蜜</div>
+          <div class="card-item zh">已開罐可樂與 7UP 放在 ⅙ 保冰；擺好糖漿、練奶、蜂蜜、鹹櫛七糖漿</div>
+          <div class="card-item en">Opened Coke &amp; 7UP on ice in ⅙; set out syrups, condensed milk, honey, salted lemon syrup</div>
+          <div class="card-item zh">器具歸位：網篹放入配料；muddler 和雪糕匙分開放入裝水的杯</div>
+          <div class="card-item en">Tools in place: mesh strainer in topping; muddler and ice cream spoon each in a cup of water</div>
+        </div>
+        <div class="fridge">
+          <div class="fridge-label">Topping Fridge Layout · Left to Right</div>
+          <div class="pans">
+            <div class="pan"><div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PGVsbGlwc2UgY3g9IjE3IiBjeT0iMjkiIHJ4PSIxMiIgcnk9IjE1IiBmaWxsPSIjRjkzQjFEIi8+PGVsbGlwc2UgY3g9IjE3IiBjeT0iMjQiIHJ4PSI1IiByeT0iNiIgZmlsbD0iI0ZGODA2MCIgb3BhY2l0eT0iMC41Ii8+PGxpbmUgeDE9IjE3IiB5MT0iMTQiIHgyPSIxNyIgeTI9IjQ0IiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZWxsaXBzZSBjeD0iMzciIGN5PSIyOSIgcng9IjEyIiByeT0iMTUiIGZpbGw9IiNDNDJFMTUiLz48ZWxsaXBzZSBjeD0iMzciIGN5PSIyNCIgcng9IjUiIHJ5PSI2IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjQiLz48bGluZSB4MT0iMzciIHkxPSIxNCIgeDI9IjM3IiB5Mj0iNDQiIHN0cm9rZT0iIzhCMUEwQSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE3IiBjeT0iMTEiIHI9IjMiIGZpbGw9IiNGOTNCMUQiLz48Y2lyY2xlIGN4PSIzNyIgY3k9IjExIiByPSIzIiBmaWxsPSIjQzQyRTE1Ii8+PC9zdmc+" alt="紅豆"></div><div class="pan-en">Red Bean<br>&#188; GN</div></div>
+            <div class="pan"><div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PGVsbGlwc2UgY3g9IjI4IiBjeT0iMzYiIHJ4PSIxNCIgcnk9IjE3IiBmaWxsPSIjRjkzQjFEIi8+PGxpbmUgeDE9IjE5IiB5MT0iMjkiIHgyPSIzNyIgeTI9IjI5IiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjE5IiB5MT0iMzUiIHgyPSIzNyIgeTI9IjM1IiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjE5IiB5MT0iNDEiIHgyPSIzNyIgeTI9IjQxIiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjI0IiB5MT0iMjIiIHgyPSIyNCIgeTI9IjUxIiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjI4IiB5MT0iMjAiIHgyPSIyOCIgeTI9IjUzIiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PGxpbmUgeDE9IjMyIiB5MT0iMjIiIHgyPSIzMiIgeTI9IjUxIiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHBhdGggZD0iTTIyIDE5IFEyOCA5IDM0IDE5IiBmaWxsPSJub25lIiBzdHJva2U9IiNGOTNCMUQiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMjUgMTYgUTI4IDcgMzEgMTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0M0MkUxNSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=" alt="菠蘿"></div><div class="pan-en">Pineapple<br>&#188; GN</div></div>
+            <div class="pan"><div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PGNpcmNsZSBjeD0iMjgiIGN5PSIzMSIgcj0iMTgiIGZpbGw9IiNGOTNCMUQiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyNCIgcng9IjUiIHJ5PSI2IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjUiLz48ZWxsaXBzZSBjeD0iMzUiIGN5PSIyMyIgcng9IjQiIHJ5PSI1IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjQiLz48ZWxsaXBzZSBjeD0iMzciIGN5PSIzNCIgcng9IjQiIHJ5PSI1IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjQiLz48ZWxsaXBzZSBjeD0iMjUiIGN5PSI0MCIgcng9IjQiIHJ5PSI0LjUiIGZpbGw9IiNGRjgwNjAiIG9wYWNpdHk9IjAuMzUiLz48cGF0aCBkPSJNMjYgMTMgUTI4IDUgMzEgMTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0M0MkUxNSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyOSIgY3k9IjciIHI9IjIuNSIgZmlsbD0iI0M0MkUxNSIvPjwvc3ZnPg==" alt="荔枝"></div><div class="pan-en">Lychee<br>&#188; GN</div></div>
+            <div class="pan"><div class="pan-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PGVsbGlwc2UgY3g9IjI4IiBjeT0iMzAiIHJ4PSIxOCIgcnk9IjE1IiBmaWxsPSIjRjkzQjFEIi8+PGVsbGlwc2UgY3g9IjEwIiBjeT0iMzAiIHJ4PSI1IiByeT0iMy41IiBmaWxsPSIjRjkzQjFEIi8+PGVsbGlwc2UgY3g9IjQ2IiBjeT0iMzAiIHJ4PSI1IiByeT0iMy41IiBmaWxsPSIjRjkzQjFEIi8+PGVsbGlwc2UgY3g9IjI4IiBjeT0iMzAiIHJ4PSIxMCIgcnk9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGODA2MCIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjYiLz48bGluZSB4MT0iMjgiIHkxPSIxNSIgeDI9IjI4IiB5Mj0iNDUiIHN0cm9rZT0iI0EwMjAxMCIgc3Ryb2tlLXdpZHRoPSIwLjgiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSIxMCIgeTE9IjMwIiB4Mj0iNDYiIHkyPSIzMCIgc3Ryb2tlPSIjQTAyMDEwIiBzdHJva2Utd2lkdGg9IjAuOCIgb3BhY2l0eT0iMC40Ii8+PHBhdGggZD0iTTI1IDE0IFEyOCA4IDMxIDE0IiBmaWxsPSIjQzQyRTE1IiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=" alt="檸檬"></div><div class="pan-en">Lemon<br>&#188; GN</div></div>
+            <div class="pan-split">
+              <div class="pan-split-top"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PGNpcmNsZSBjeD0iMjgiIGN5PSIzMCIgcj0iMTciIGZpbGw9IiNGOTNCMUQiIG9wYWNpdHk9IjAuNzUiLz48Y2lyY2xlIGN4PSIyOCIgY3k9IjMwIiByPSIxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkY4MDYwIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyOCIgeTE9IjEzIiB4Mj0iMjgiIHkyPSI0NyIgc3Ryb2tlPSIjQTAyMDEwIiBzdHJva2Utd2lkdGg9IjAuOCIgb3BhY2l0eT0iMC40Ii8+PGxpbmUgeDE9IjExIiB5MT0iMzAiIHgyPSI0NSIgeTI9IjMwIiBzdHJva2U9IiNBMDIwMTAiIHN0cm9rZS13aWR0aD0iMC44IiBvcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyOCIgY3k9IjMwIiByPSI0IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjQ1Ii8+PC9zdmc+" alt="青檸"><div style="font-size:0.3125rem;font-weight:700;color:#F93B1D;text-align:center;">Lime &#8539;</div></div>
+              <div class="pan-split-bot"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiI+PHBhdGggZD0iTTI4IDUwIEwyOCAyMiIgc3Ryb2tlPSIjOEIxQTBBIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI4IDM0IFExNyAzMCAxNiAyMSIgc3Ryb2tlPSIjOEIxQTBBIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yOCA0MCBRMzkgMzYgNDAgMjciIHN0cm9rZT0iIzhCMUEwQSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZWxsaXBzZSBjeD0iMjEiIGN5PSIxNiIgcng9IjEzIiByeT0iOSIgZmlsbD0iI0Y5M0IxRCIgdHJhbnNmb3JtPSJyb3RhdGUoLTIwIDIxIDE2KSIvPjxlbGxpcHNlIGN4PSIyOCIgY3k9IjI3IiByeD0iMTIiIHJ5PSI4IiBmaWxsPSIjQzQyRTE1IiB0cmFuc2Zvcm09InJvdGF0ZSgxMCAyOCAyNykiLz48ZWxsaXBzZSBjeD0iMzUiIGN5PSIxOSIgcng9IjExIiByeT0iNyIgZmlsbD0iI0Y5M0IxRCIgb3BhY2l0eT0iMC44NSIgdHJhbnNmb3JtPSJyb3RhdGUoMzAgMzUgMTkpIi8+PGVsbGlwc2UgY3g9IjIwIiBjeT0iMTQiIHJ4PSI1IiByeT0iMy41IiBmaWxsPSIjRkY4MDYwIiBvcGFjaXR5PSIwLjQiIHRyYW5zZm9ybT0icm90YXRlKC0yMCAyMCAxNCkiLz48L3N2Zz4=" alt="薄荷"><div style="font-size:0.3125rem;font-weight:700;color:#F93B1D;text-align:center;">Mint &#8537;</div></div>
+              <div class="pan-split-en">&#188; GN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time" id="t7">1100</div>
+      <div class="card">
+        <div class="card-title zh">協助其他工作站</div>
+        <div class="card-title en">Assist Other Stations</div>
+        <div class="card-body">
+          <div class="card-item zh">飲品站任務較少，應比其他站更早就緒</div>
+          <div class="card-item en">Drink station has fewer tasks — be ready earlier than other stations</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1130</div>
+      <div class="card">
+        <div class="card-title zh">放出餐雞翅（2L × 2）</div>
+        <div class="card-title en">Place Service Wings in Bain Marie (2L × 2)</div>
+        <div class="card-body">
+          <div class="card-item zh">保溫爐調至 80°C，約 10 分鐘後記得攪拌</div>
+          <div class="card-item en">Set bain marie to 80°C; stir after ~10 min</div>
+          <div class="card-item warn wd-note zh">⚠ 最遲 11:30</div>
+          <div class="card-item warn wd-note en">⚠ In bain marie by 11:30 latest</div>
+          <div class="card-item warn we-note zh">⚠ 最遲 11:20</div>
+          <div class="card-item warn we-note en">⚠ In bain marie by 11:20 latest</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">1145</div>
+      <div class="card">
+        <div class="card-title zh">調味羅宋湯</div>
+        <div class="card-title en">Season Borscht</div>
+        <div class="card-body">
+          <div class="card-item zh">先加 25ml（1 shot）檸檬汁，再按需調整</div>
+          <div class="card-item en">Start with 25ml (1 shot) lemon juice, adjust to taste</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-label">Service</span><span class="section-rule"></span></div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">1200+</div>
+      <div class="card">
+        <div class="card-title zh">出餐優先，同時留意煮飯情況</div>
+        <div class="card-title en">Prioritise Service — Monitor Rice Cooker</div>
+        <div class="card-body">
+          <div class="card-item wd-note zh">忙碌時段協助 Pass：裝雞翅、裝湯、盛飯、換飯煲、包外賣等</div>
+          <div class="card-item wd-note en">Busy periods: assist Pass — plate wings, soup, rice, swap cookers, pack takeaway</div>
+          <div class="card-item we-note zh">高峰時段器具可留水槽讓炸爐站協助清洗</div>
+          <div class="card-item we-note en">Peak hours: leave utensils at sink for Fryer station to wash</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time zh">全日</div>
+      <div class="tl-time en" style="display:none">All day</div>
+      <div class="card">
+        <div class="card-title zh">離開崗位前確認水吧存貨充足</div>
+        <div class="card-title en">Check Bar Stock Before Leaving Station</div>
+        <div class="card-body">
+          <div class="card-item warn zh">⚠ 配料、糖漿、豆奶、奶蓋等必須維持一半以上</div>
+          <div class="card-item warn en">⚠ Toppings, syrups, soy milk, cream cap must stay above half</div>
+          <div class="card-item warn zh">⚠ 勿讓接手的人替你補充存貨</div>
+          <div class="card-item warn en">⚠ Do not leave restocking for the next person</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-label">Prepare</span><span class="section-rule"></span></div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">1200+</div>
+      <div class="card">
+        <div class="card-title zh">依照 Prep List 完成當日備料</div>
+        <div class="card-title en">Complete Daily Prep per Prep List</div>
+
+        <div class="prep-tips">
+          <div class="prep-tips-label">準備 Tips</div>
+          <div class="prep-tips-body zh">¼ 檸檬片 ≈ 16 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉(袋) ≈ 3–4 杯<br>茶葉 300g × 2、糖 190g / 300g（放推車第二層）</div>
+          <div class="prep-tips-body en">¼ lemon slices ≈ 16; ⅑ lime wedges ≈ 6; mint (bag) ≈ 3–4 cups<br>Tea leaves 300g × 2, sugar 190g / 300g (place on trolley 2nd shelf)</div>
+        </div>
+
+        <div class="prep-rows">
+          <div class="prep-row">
+            <span class="prep-tag">風房</span>
+            <span class="prep-content zh">檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</span>
+            <span class="prep-content en">Lemon, lime, milk, Yakult, Oatly (yellow/white)</span>
+          </div>
+          <div class="prep-row">
+            <span class="prep-tag">水吧</span>
+            <span class="prep-content zh">一般糖漿、荔枝/菠蘿罐頭糖漿、紅豆大罐頭</span>
+            <span class="prep-content en">Plain syrup, lychee/pineapple syrup, large red bean can</span>
+          </div>
+          <div class="prep-row">
+            <span class="prep-tag">用餐區</span>
+            <span class="prep-content zh">A檯後下方 — 紅豆大罐頭<br>E檯 — 整包茶葉<br>DJ位 — 吸管、外帶杯/蓋</span>
+            <span class="prep-content en">Behind A table — large red bean can<br>E shelf — whole pack tea leaves<br>DJ station — straws, takeaway cups/lids</span>
+          </div>
+          <div class="prep-row">
+            <span class="prep-tag">KP</span>
+            <span class="prep-content zh">糖罐、淡奶、養樂多、荔枝/菠蘿糖水(5L)、香草&amp;巧克力冰淇淋(Freezer small)、咖啡粉</span>
+            <span class="prep-content en">Sugar jar, evaporated milk, Yakult, lychee/pineapple syrup (5L), vanilla &amp; choc ice cream (Freezer small), coffee powder</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time zh">備料後</div>
+      <div class="tl-time en" style="display:none">After prep</div>
+      <div class="card">
+        <div class="card-title zh">若水吧備料完成，主動協助其他工作站</div>
+        <div class="card-title en">Once Bar Prep Done — Help Other Stations</div>
+        <div class="card-body">
+          <div class="card-item zh">切黃油 / 青椒 / 火腿；擦蔥 / 西芹；洋蔥 / 紅蘿蔔去皮；剪辣椒等</div>
+          <div class="card-item en">Slice butter/capsicum/ham; wipe spring onion/celery; peel onion/carrot; cut chilli etc.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">1500</div>
+      <div class="card">
+        <div class="card-title zh">完成當日深層清潔</div>
+        <div class="card-title en">Complete Deep Clean for the Day</div>
+        <div class="card-body">
+          <div class="card-item wd-note zh">清潔茶機（週一至週五）：優先清潔較髒的茶機</div>
+          <div class="card-item wd-note en">Clean tea machine (Mon–Fri): do the dirtier one first</div>
+          <div class="card-item we-note zh">清潔茶機：優先清潔較髒的茶機</div>
+          <div class="card-item we-note en">Clean tea machine: do the dirtier one first</div>
+          <div class="card-item zh">清潔完後補水至 6L，黃色噴噴擦外面</div>
+          <div class="card-item en">After cleaning, refill to 6L and wipe exterior with yellow spray</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-label">Soft Close</span><span class="section-rule"></span></div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time" id="t8">1730</div>
+      <div class="card">
+        <div class="card-title zh">確認 Closing Checklist，規劃可提前完成的項目</div>
+        <div class="card-title en">Review Closing Checklist — Plan What Can Be Done Early</div>
+        <div class="card-body">
+          <div class="card-item zh">工作台做 2-step cleaning，保留一半繼續接單</div>
+          <div class="card-item en">2-step clean counter; keep half operational for ongoing orders</div>
+          <div class="card-item zh">先將墊子及部分工具拿去清洗</div>
+          <div class="card-item en">Send mats and some tools for washing</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">1900–1930</div>
+      <div class="card">
+        <div class="card-title zh">關閉後方保溫爐；最後一煲飯後關閉飯煲並清潔</div>
+        <div class="card-title en">Turn Off Rear Bain Marie; After Last Rice — Turn Off &amp; Clean Cooker</div>
+        <div class="card-body">
+          <div class="card-item zh">沙爹牛肉、雞湯剩一半可換至 ⅙</div>
+          <div class="card-item en">Consolidate satay beef and chicken broth into ⅙ pan</div>
+          <div class="card-item zh">雞翅集中放在同一個 ⅓，詢問 DS 是否保留瑞士雞翅汁</div>
+          <div class="card-item en">Consolidate wings into one ⅓ pan; check with DS on Swiss wing sauce</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-label">Closing</span><span class="section-rule"></span></div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title zh">所有配料、淡奶、煉奶等包保鮮膜放回冰箱</div>
+        <div class="card-title en">Wrap All Toppings &amp; Dairy — Return to Fridge</div>
+        <div class="card-body">
+          <div class="card-item zh">一般糖漿、蜂蜜、糖水、青檸/檸檬汁不需要冰</div>
+          <div class="card-item en">Plain syrup, honey, sugar water, lime/lemon juice — no refrigeration needed</div>
+          <div class="card-item warn zh">⚠ 紅豆冰奶、奶蓋等奶類必須冰在 Bar 1</div>
+          <div class="card-item warn en">⚠ Red bean milk, cream cap and all dairy must be in Bar 1 fridge</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title zh">收拾糖漿瓶嘴及所有工具容器去清洗</div>
+        <div class="card-title en">Remove Syrup Caps &amp; All Tools for Washing</div>
+        <div class="card-body">
+          <div class="card-item warn zh">⚠ 水吧器具只能在 Show Kitchen 清洗</div>
+          <div class="card-item warn en">⚠ Bar utensils must only be washed in the Show Kitchen</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title">SOAP — Clean All Areas</div>
+        <div class="card-body">
+          <div class="card-item zh">水吧檯面、製冰機、所有保溫爐、兩個飯煲、包裝區域、冰櫃等</div>
+          <div class="card-item en">Bar counter, ice machine, all bain maries, both rice cookers, packaging area, freezer etc.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2000</div>
+      <div class="card">
+        <div class="card-title zh">幫忙拿所有器具至 KP 清洗，食材放回風房</div>
+        <div class="card-title en">Bring All Equipment to KP — Return Ingredients to Cold Room</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time zh">隨時</div>
+      <div class="tl-time en" style="display:none">Any time</div>
+      <div class="card">
+        <div class="card-title zh">隨時下樓拿乾淨工具回 Show Kitchen 並擺放歸位</div>
+        <div class="card-title en">Bring Clean Tools Back Up to Show Kitchen and Put Away</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time zh">最後</div>
+      <div class="tl-time en" style="display:none">Final</div>
+      <div class="card">
+        <div class="card-title zh">再次確認及完成所有 Closing Checklist</div>
+        <div class="card-title en">Final Check — Complete All Closing Checklist Items</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var times={wd:["1000","1010","1015","1020","1050","1100","1100","1730"],we:["0800","0810","0815","0820","0845","0840","0900","1700"]};
+var ids=["t1","t2","t3","t4","t5","t6","t7","t8"];
+function setMode(m){
+  var isWd=m==="wd";
+  document.getElementById("btn-wd").className="toggle-btn"+(isWd?" active":"");
+  document.getElementById("btn-we").className="toggle-btn"+(!isWd?" active":"");
+  ids.forEach(function(id,i){var el=document.getElementById(id);if(el)el.textContent=times[m][i];});
+  document.querySelectorAll(".wd-note").forEach(function(el){el.style.display=isWd?"":"none";});
+  document.querySelectorAll(".we-note").forEach(function(el){el.style.display=isWd?"none":"";});
+}
+setMode("wd");
+
+var isEn=false;
+function toggleLang(){
+  isEn=!isEn;
+  document.body.classList.toggle("lang-en",isEn);
+  document.getElementById("lang-btn").textContent=isEn?"CHI":"EN";
+  document.querySelectorAll(".tl-time.zh").forEach(function(el){el.style.display=isEn?"none":"";});
+  document.querySelectorAll(".tl-time.en").forEach(function(el){el.style.display=isEn?"":"none";});
+}
+</script>
+</body>
+</html>
