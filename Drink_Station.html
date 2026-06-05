@@ -72,6 +72,15 @@
     .pan-split-bot img { width:100%; max-width:20px; height:auto; }
     .pan-split-en { font-size:5px !important; font-weight:700; color:#F93B1D; text-align:center; padding:2px 2px 3px; border-top:0.5px solid #F93B1D; letter-spacing:0.05em; }
 
+    /* ── Prepare card ── */
+    .prep-tips { background: rgba(249,59,29,0.05); border: 0.5px solid rgba(249,59,29,0.25); border-radius: 3px; padding: 5px 7px; margin: 4px 0 6px; }
+    .prep-tips-label { font-weight: 700; font-size: 6px; color: #F93B1D; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+    .prep-tips-body { font-size: 6px; color: #000; line-height: 9px; }
+    .prep-rows { display: flex; flex-direction: column; gap: 4px; }
+    .prep-row { display: grid; grid-template-columns: 2.8rem 1fr; gap: 5px; align-items: baseline; }
+    .prep-tag { font-weight: 700; font-size: 5.5px; color: #fff; background: #F93B1D; border-radius: 3px; padding: 1px 4px; text-align: center; white-space: nowrap; line-height: 9px; }
+    .prep-content { font-size: 6px; color: #000; line-height: 9px; }
+    
   </style>
 </head>
 <body>
@@ -286,26 +295,51 @@
   </div>
 </div>
 
-<div class="section">
-  <div class="section-header"><span class="section-label">Prepare</span><span class="section-rule"></span></div>
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-time">1200+</div>
-      <div class="card">
-        <div class="card-title zh">依照 Prep List 完成當日備料</div>
-        <div class="card-title en">Complete Daily Prep per Prep List</div>
-        <div class="card-body">
-          <div class="card-item zh">風房：檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</div>
-          <div class="card-item en">Cold room: lemon, lime, milk, Yakult, Oatly (yellow/white)</div>
-          <div class="card-item zh">水吧：一般糖漿、荔枝/菠蘿罐頭糖漿、[大]紅豆罐頭(A檯後面下方)</div>
-          <div class="card-item en">Bar: plain syrup, lychee/pineapple syrup, large red bean can</div>
-          <div class="card-item zh">¼ 檸檬片 ≈ 16 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉 ≈ 3–4 杯</div>
-          <div class="card-item zh">準備：茶葉 300g x 2、糖 190g / 300g （放推車第二層）</div>
-          <div class="card-item zh">補充：糖罐(KP)、淡奶(KP)、整包茶葉(E檯)、養樂多、荔枝 / 菠蘿糖水(5L)、香草&巧克力冰淇淋(KP Freezer small)</div>
-          <div class="card-item en">¼ lemon slices ≈ 16; ⅑ lime wedges ≈ 6; mint ≈ 3–4 cups</div>
-        </div>
-      </div>
+<div class="tl-item">
+  <div class="tl-time">1200+</div>
+  <div class="card">
+
+    <div class="card-title zh">依照 Prep List 完成當日備料</div>
+    <div class="card-title en">Complete Daily Prep per Prep List</div>
+
+    <!-- 準備 Tips -->
+    <div class="prep-tips">
+      <div class="prep-tips-label">準備 Tips</div>
+      <div class="prep-tips-body zh">¼ 檸檬片 ≈ 16 顆；⅑ 青檸粒 ≈ 6 顆；薄荷葉(袋) ≈ 3–4 杯<br>茶葉 300g × 2、糖 190g / 300g（放推車第二層）</div>
+      <div class="prep-tips-body en">¼ lemon slices ≈ 16; ⅑ lime wedges ≈ 6; mint (bag) ≈ 3–4 cups<br>Tea leaves 300g × 2, sugar 190g / 300g (place on trolley 2nd shelf)</div>
     </div>
+
+    <!-- 備料地點 -->
+    <div class="prep-rows">
+
+      <div class="prep-row">
+        <span class="prep-tag">風房</span>
+        <span class="prep-content zh">檸檬、青檸、牛奶、養樂多、Oatly（黃/白）</span>
+        <span class="prep-content en">Lemon, lime, milk, Yakult, Oatly (yellow/white)</span>
+      </div>
+
+      <div class="prep-row">
+        <span class="prep-tag">水吧</span>
+        <span class="prep-content zh">一般糖漿、荔枝/菠蘿罐頭＆糖漿</span>
+        <span class="prep-content en">syrup, lychee/pineapple can & syrup</span>
+      </div>
+
+      <div class="prep-row">
+        <span class="prep-tag">用餐區</span>
+        <span class="prep-content zh">A檯後下方 — 紅豆大罐頭<br>E檯 — 整包茶葉<br>DJ位 — 吸管、外帶杯/蓋</span>
+        <span class="prep-content en">Behind A table — large red bean can<br>E shelf — whole pack tea leaves<br>DJ station — straws, takeaway cups/lids</span>
+      </div>
+
+      <div class="prep-row">
+        <span class="prep-tag">KP</span>
+        <span class="prep-content zh">砂糖、淡奶、咖啡粉、香草&amp;巧克力冰淇淋(Freezer small)</span>
+        <span class="prep-content en">Sugar, evaporated milk, coffee powder, vanilla &amp; choc ice cream (Freezer small)</span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
     <div class="tl-item">
       <div class="tl-time zh">備料後</div>
       <div class="tl-time en" style="display:none">After prep</div>
